@@ -1,9 +1,9 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  /* config options here */
-  cacheComponents: true,
-  partialPrefetching: true,
+  // Cache Components is intentionally disabled: every route in NesiPlan is
+  // per-user authenticated (Supabase session cookies) and realtime, so there is
+  // no static shell to gain, and `use cache` scopes cannot refresh auth cookies.
   turbopack: {
     rules: {
       "*.css": {
