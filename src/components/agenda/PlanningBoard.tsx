@@ -10,6 +10,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { addBlock, addTask, deleteOwnerItem, toggleTask } from "@/lib/actions/owner";
+import { CalendarFeeds } from "@/components/agenda/CalendarFeeds";
 import { fmtTime } from "@/lib/dates";
 import type { Tables } from "@/lib/database.types";
 
@@ -19,16 +20,19 @@ export function PlanningBoard({
   blocks,
   tasks,
   today,
+  feeds,
 }: {
   blocks: Item[];
   tasks: Item[];
   today: string;
+  feeds: Tables<"calendar_feeds">[];
 }) {
   return (
     <Tabs defaultValue="tasks">
-      <TabsList className="grid w-full grid-cols-2">
+      <TabsList className="grid w-full grid-cols-3">
         <TabsTrigger value="tasks">✅ Taken</TabsTrigger>
         <TabsTrigger value="blocks">⛔ Blokken</TabsTrigger>
+        <TabsTrigger value="feeds">📅 Agenda</TabsTrigger>
       </TabsList>
 
       <TabsContent value="tasks" className="space-y-3 pt-3">
@@ -39,6 +43,10 @@ export function PlanningBoard({
       <TabsContent value="blocks" className="space-y-3 pt-3">
         <BlockList blocks={blocks} />
         <AddBlockForm today={today} />
+      </TabsContent>
+
+      <TabsContent value="feeds" className="space-y-3 pt-3">
+        <CalendarFeeds feeds={feeds} />
       </TabsContent>
     </Tabs>
   );
@@ -104,7 +112,11 @@ function BlockList({ blocks }: { blocks: Item[] }) {
                 {block.ends_at ? fmtTime(block.ends_at) : ""}
               </p>
             </div>
-            <DeleteButton id={block.id} label={block.title} />
+            {block.source === "manual" ? (
+              <DeleteButton id={block.id} label={block.title} />
+            ) : (
+              <span className="label-eyebrow shrink-0 text-[10px]">uit agenda</span>
+            )}
           </div>
         ))}
       </CardContent>

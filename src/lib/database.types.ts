@@ -560,6 +560,8 @@ export type Database = {
           done: boolean;
           color: string | null;
           created_at: string;
+          source: string;
+          external_uid: string | null;
         };
         Insert: {
           id?: string;
@@ -572,6 +574,8 @@ export type Database = {
           done?: boolean;
           color?: string | null;
           created_at?: string;
+          source?: string;
+          external_uid?: string | null;
         };
         Update: {
           id?: string;
@@ -584,6 +588,8 @@ export type Database = {
           done?: boolean;
           color?: string | null;
           created_at?: string;
+          source?: string;
+          external_uid?: string | null;
         };
         Relationships: [];
       };
@@ -797,6 +803,39 @@ export type Database = {
         Update: {
           user_id?: string;
           token?: string;
+        };
+        Relationships: [];
+      };
+      calendar_feeds: {
+        Row: {
+          id: string;
+          label: string;
+          url: string;
+          enabled: boolean;
+          last_synced_at: string | null;
+          last_error: string | null;
+          event_count: number;
+          created_at: string;
+        };
+        Insert: {
+          id?: string;
+          label?: string;
+          url: string;
+          enabled?: boolean;
+          last_synced_at?: string | null;
+          last_error?: string | null;
+          event_count?: number;
+          created_at?: string;
+        };
+        Update: {
+          id?: string;
+          label?: string;
+          url?: string;
+          enabled?: boolean;
+          last_synced_at?: string | null;
+          last_error?: string | null;
+          event_count?: number;
+          created_at?: string;
         };
         Relationships: [];
       };

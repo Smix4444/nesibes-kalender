@@ -32,6 +32,7 @@
     "date-fns": "^4.4.0",
     "date-fns-tz": "^3.2.0",
     "html-to-image": "^1.11.13",
+    "ical.js": "^2.2.1",
     "ics": "^3.12.1",
     "leaflet": "^1.9.4",
     "lucide-react": "^1.77.0",

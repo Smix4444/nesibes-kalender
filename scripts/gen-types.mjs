@@ -13,8 +13,17 @@ const parse = async (f) => {
   return pg.parse(readFileSync(`supabase/migrations/${f}`, "utf8")).parse_tree.stmts;
 };
 
-const schema = await parse("20261122000001_schema.sql");
-const funcs = [...(await parse("20261122000003_functions.sql")), ...(await parse("20261122000002_rls.sql"))];
+// Alle migrations, op volgorde: tabellen en kolommen komen ook uit latere.
+const { readdirSync } = await import("node:fs");
+const files = readdirSync("supabase/migrations").filter((f) => f.endsWith(".sql")).sort();
+
+const schema = [];
+const funcs = [];
+for (const file of files) {
+  const stmts = await parse(file);
+  schema.push(...stmts);
+  funcs.push(...stmts);
+}
 
 const enums = {};
 const tables = {};
@@ -65,6 +74,30 @@ for (const { stmt } of schema) {
     });
   }
   tables[c.relation.relname] = cols;
+}
+
+// Kolommen die een latere migration toevoegt.
+for (const { stmt } of schema) {
+  const a = stmt.AlterTableStmt;
+  if (!a || (a.relation.schemaname ?? "public") !== "public") continue;
+  const target = tables[a.relation.relname];
+  if (!target) continue;
+
+  for (const cmd of a.cmds ?? []) {
+    const sub = cmd.AlterTableCmd;
+    if (sub?.subtype !== "AT_AddColumn" || !sub.def?.ColumnDef) continue;
+
+    const d = sub.def.ColumnDef;
+    if (target.some((c) => c.name === d.colname)) continue;
+    const cons = (d.constraints ?? []).map((x) => x.Constraint.contype);
+    target.push({
+      name: d.colname,
+      ts: tsType(typeName(d.typeName), (d.typeName.arrayBounds ?? []).length > 0),
+      notNull: cons.includes("CONSTR_NOTNULL") || cons.includes("CONSTR_PRIMARY"),
+      hasDefault: cons.includes("CONSTR_DEFAULT") || cons.includes("CONSTR_IDENTITY"),
+      identity: cons.includes("CONSTR_IDENTITY"),
+    });
+  }
 }
 
 // ---------- functies ----------

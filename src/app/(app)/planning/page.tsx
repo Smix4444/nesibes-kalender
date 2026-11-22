@@ -3,6 +3,7 @@ import type { Metadata } from "next";
 import { PlanningBoard } from "@/components/agenda/PlanningBoard";
 import { requireProfile } from "@/lib/auth";
 import { getOwnerItems } from "@/lib/data";
+import { createClient } from "@/lib/supabase/server";
 import { dayKey } from "@/lib/dates";
 
 export const metadata: Metadata = { title: "Mijn planning" };
@@ -13,7 +14,11 @@ export default async function PlanningPage() {
   if (profile.role !== "owner") redirect("/");
 
   const today = dayKey(new Date());
-  const { blocks, tasks } = await getOwnerItems(today);
+  const supabase = await createClient();
+  const [{ blocks, tasks }, { data: feeds }] = await Promise.all([
+    getOwnerItems(today),
+    supabase.from("calendar_feeds").select("*").order("created_at"),
+  ]);
 
   return (
     <div className="space-y-4">
@@ -24,7 +29,7 @@ export default async function PlanningPage() {
         </p>
       </header>
 
-      <PlanningBoard blocks={blocks} tasks={tasks} today={today} />
+      <PlanningBoard blocks={blocks} tasks={tasks} today={today} feeds={feeds ?? []} />
     </div>
   );
 }
