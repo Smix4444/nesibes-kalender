@@ -23,7 +23,7 @@ export default function InstallPage() {
 
       <InstallGuide />
 
-      <Button render={<Link href="/" />} variant="ghost" className="mt-auto h-11">
+      <Button nativeButton={false} render={<Link href="/" />} variant="ghost" className="mt-auto h-11">
         Later, breng me naar de app
       </Button>
     </main>

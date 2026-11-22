@@ -61,7 +61,7 @@ export function DayStrip({
         );
 
         const className = cn(
-          "flex min-h-[74px] w-[52px] shrink-0 flex-col items-center rounded-2xl border px-2 py-2.5 transition-all duration-200 active:scale-95",
+          "flex min-h-[74px] w-[52px] shrink-0 flex-col items-center rounded-xl border px-2 py-2.5 transition-all duration-200 active:scale-95",
           active
             ? "border-cig bg-cig text-white shadow-warm-md"
             : "border-border bg-card shadow-warm-sm",

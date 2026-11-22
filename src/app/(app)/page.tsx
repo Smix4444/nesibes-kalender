@@ -241,7 +241,7 @@ async function FriendHome() {
               icon="☕"
               title="Nog niets gepland"
               action={
-                <Button render={<Link href="/new" />} className="h-11 px-5 font-bold">
+                <Button nativeButton={false} render={<Link href="/new" />} className="h-11 px-5 font-bold">
                   Plan iets leuks
                 </Button>
               }

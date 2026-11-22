@@ -15,7 +15,7 @@ export function RouteButtons({ lat, lng }: { lat: number; lng: number }) {
           key={link.label}
           variant="outline"
           className="h-11 text-xs"
-          render={<a href={link.href} target="_blank" rel="noopener noreferrer" />}
+          nativeButton={false} render={<a href={link.href} target="_blank" rel="noopener noreferrer" />}
         >
           {link.label}
         </Button>

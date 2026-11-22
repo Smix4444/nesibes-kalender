@@ -38,8 +38,8 @@ export const metadata: Metadata = {
 
 export const viewport: Viewport = {
   themeColor: [
-    { media: "(prefers-color-scheme: light)", color: "#d7263d" },
-    { media: "(prefers-color-scheme: dark)", color: "#16110f" },
+    { media: "(prefers-color-scheme: light)", color: "#ffffff" },
+    { media: "(prefers-color-scheme: dark)", color: "#070b14" },
   ],
   width: "device-width",
   initialScale: 1,
@@ -49,8 +49,14 @@ export const viewport: Viewport = {
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
-    <html lang="nl" suppressHydrationWarning>
-      <body className={`${dmSans.variable} ${bricolage.variable} min-h-dvh antialiased`}>
+    // De font-variabelen horen op <html>: globals.css zet font-family op het
+    // html-element, en een variabele op <body> is daar niet zichtbaar.
+    <html
+      lang="nl"
+      className={`${dmSans.variable} ${bricolage.variable}`}
+      suppressHydrationWarning
+    >
+      <body className="min-h-dvh antialiased">
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange>
           {children}
           <Toaster position="top-center" richColors />

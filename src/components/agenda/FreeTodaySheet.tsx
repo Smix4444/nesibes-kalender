@@ -35,7 +35,7 @@ export function FreeTodaySheet({ groups }: { groups: Tables<"groups">[] }) {
     <Drawer open={open} onOpenChange={setOpen}>
       <DrawerTrigger
         render={
-          <Button className="h-14 w-full bg-linear-to-br from-cig-2 to-cig text-base font-extrabold text-white">
+          <Button className="h-14 w-full rounded-2xl bg-cig text-base font-extrabold text-white shadow-warm-md">
             ✨ Ik ben vrij vandaag
           </Button>
         }

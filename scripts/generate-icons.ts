@@ -15,13 +15,13 @@ function kofte(scale = 1): string {
   return `
   <g transform="translate(256 234) rotate(-24) scale(${scale})">
     <ellipse rx="120" ry="80" fill="url(#kofte)"/>
-    <g stroke="#6E120F" stroke-opacity="0.5" stroke-width="13" stroke-linecap="round" fill="none">
+    <g stroke="#7A2516" stroke-opacity="0.45" stroke-width="13" stroke-linecap="round" fill="none">
       <path d="M-68 -48 C -54 -2 -54 10 -68 52"/>
       <path d="M-23 -64 C -9 -8 -9 6 -23 66"/>
       <path d="M23 -64 C 37 -8 37 6 23 66"/>
       <path d="M68 -48 C 82 -2 82 10 68 52"/>
     </g>
-    <ellipse rx="120" ry="80" fill="none" stroke="#5E0F0C" stroke-opacity="0.32" stroke-width="9"/>
+    <ellipse rx="120" ry="80" fill="none" stroke="#5E1A10" stroke-opacity="0.3" stroke-width="9"/>
   </g>`;
 }
 
@@ -29,13 +29,13 @@ function kofte(scale = 1): string {
 function calendar(): string {
   return `
   <g transform="translate(322 322)">
-    <rect x="0" y="0" width="134" height="126" rx="24" fill="#FFF8F1" stroke="#7A1420" stroke-width="9"/>
-    <path d="M0 24 a24 24 0 0 1 24 -24 h86 a24 24 0 0 1 24 24 v16 h-134 z" fill="#D7263D"/>
-    <circle cx="36" cy="70" r="10" fill="#D7263D"/>
-    <circle cx="67" cy="70" r="10" fill="#D7263D"/>
-    <circle cx="98" cy="70" r="10" fill="#D7263D"/>
-    <circle cx="36" cy="100" r="10" fill="#D7263D"/>
-    <circle cx="67" cy="100" r="10" fill="#2BB673"/>
+    <rect x="0" y="0" width="134" height="126" rx="24" fill="#FFFFFF" stroke="#0C1E45" stroke-width="9"/>
+    <path d="M0 24 a24 24 0 0 1 24 -24 h86 a24 24 0 0 1 24 24 v16 h-134 z" fill="#12306B"/>
+    <circle cx="36" cy="70" r="10" fill="#12306B"/>
+    <circle cx="67" cy="70" r="10" fill="#12306B"/>
+    <circle cx="98" cy="70" r="10" fill="#12306B"/>
+    <circle cx="36" cy="100" r="10" fill="#12306B"/>
+    <circle cx="67" cy="100" r="10" fill="#F0863C"/>
   </g>`;
 }
 
@@ -49,12 +49,12 @@ function appIcon({ maskable = false }: { maskable?: boolean } = {}): string {
   return `<svg width="512" height="512" viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg">
   <defs>
     <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
-      <stop offset="0" stop-color="#FF8A3D"/>
-      <stop offset="1" stop-color="#D7263D"/>
+      <stop offset="0" stop-color="#1B4A9E"/>
+      <stop offset="1" stop-color="#0C1E45"/>
     </linearGradient>
     <linearGradient id="kofte" x1="0" y1="0" x2="0.6" y2="1">
-      <stop offset="0" stop-color="#C73B2A"/>
-      <stop offset="1" stop-color="#8E1B16"/>
+      <stop offset="0" stop-color="#F0863C"/>
+      <stop offset="1" stop-color="#C0442A"/>
     </linearGradient>
   </defs>
   <rect width="512" height="512" rx="${maskable ? 0 : 112}" fill="url(#bg)"/>
@@ -89,7 +89,7 @@ async function main() {
   for (const target of targets) {
     let pipeline = sharp(target.svg, { density: 384 }).resize(target.size, target.size);
     // Apple negeert transparantie niet netjes op het beginscherm -> dichte achtergrond.
-    if (target.flatten) pipeline = pipeline.flatten({ background: "#D7263D" });
+    if (target.flatten) pipeline = pipeline.flatten({ background: "#12306B" });
     const buffer = await pipeline.png().toBuffer();
     await writeFile(path.join(OUT_DIR, target.file), buffer);
     console.log(`✅ ${target.file} (${target.size}x${target.size}, ${buffer.length} bytes)`);

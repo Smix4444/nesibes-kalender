@@ -144,6 +144,7 @@ function IdeaCard({ idea, myId, canManage }: { idea: IdeaRow; myId: string; canM
               <Button
                 size="sm"
                 className="h-9"
+                nativeButton={false}
                 render={
                   <Link
                     href={`/new?title=${encodeURIComponent(idea.title)}&category=${idea.category}&idea=${idea.id}`}

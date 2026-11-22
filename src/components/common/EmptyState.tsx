@@ -16,16 +16,16 @@ export function EmptyState({
   action?: ReactNode;
 }) {
   return (
-    <div className="flex flex-col items-center gap-2 px-6 py-10 text-center">
+    <div className="flex flex-col items-center gap-1.5 px-6 py-7 text-center">
       <span
-        className="font-heading text-5xl leading-none opacity-20 select-none"
+        className="font-heading text-[28px] leading-none opacity-25 select-none"
         aria-hidden
       >
         {icon}
       </span>
-      <p className="font-heading text-base font-bold">{title}</p>
+      <p className="font-heading text-[15px] font-bold">{title}</p>
       {children ? (
-        <p className="max-w-[28ch] text-sm leading-relaxed text-muted-foreground">{children}</p>
+        <p className="max-w-[30ch] text-[13px] leading-snug text-muted-foreground">{children}</p>
       ) : null}
       {action ? <div className="pt-2">{action}</div> : null}
     </div>

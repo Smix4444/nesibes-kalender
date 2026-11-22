@@ -37,7 +37,7 @@ export function CalendarLink({ token }: { token: string }) {
             <Copy className="size-4" /> Kopieer
           </Button>
           <Button
-            render={<a href={url.replace(/^https?:/, "webcal:")} />}
+            nativeButton={false} render={<a href={url.replace(/^https?:/, "webcal:")} />}
             className="h-11"
           >
             Abonneren

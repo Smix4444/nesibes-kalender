@@ -63,85 +63,85 @@
 }
 
 :root {
-  /* Warm papier, çiğköfte-rood, goud voor VIP. */
-  --background: #fdf6ee;
-  --foreground: #1c1512;
-  --card: #fffdfb;
-  --card-foreground: #1c1512;
-  --popover: #fffdfb;
-  --popover-foreground: #1c1512;
+  /* Wit papier, bijna-zwarte tekst, donkerblauw als accent. */
+  --background: #ffffff;
+  --foreground: #0a1020;
+  --card: #ffffff;
+  --card-foreground: #0a1020;
+  --popover: #ffffff;
+  --popover-foreground: #0a1020;
 
-  --primary: #c3202f;
-  --primary-foreground: #fff8f1;
-  --secondary: #f6e7d8;
-  --secondary-foreground: #1c1512;
-  --muted: #f3e8dc;
-  --muted-foreground: #8a7a6d;
-  --accent: #f6e7d8;
-  --accent-foreground: #1c1512;
-  --destructive: #b01324;
+  --primary: #12306b;
+  --primary-foreground: #ffffff;
+  --secondary: #eef2f8;
+  --secondary-foreground: #0a1020;
+  --muted: #f3f5f9;
+  --muted-foreground: #5a6679;
+  --accent: #eef2f8;
+  --accent-foreground: #0a1020;
+  --destructive: #c0243a;
 
-  --border: #e8dacb;
-  --input: #e2d2c0;
-  --ring: #c3202f;
-  --radius: 1rem;
+  --border: #e3e7ee;
+  --input: #d7dde7;
+  --ring: #2b62d9;
+  --radius: 0.875rem;
 
-  /* merk */
-  --cig: #c3202f;
-  --cig-2: #ef7a35;
-  --ink: #1c1512;
-  --success: #1f8f5f;
-  --warning: #d98324;
-  --gold-from: #f3d27a;
-  --gold-to: #b5881a;
-  --gold: #a87c15;
-  --bf: #e24b7b;
+  /* merk: navy als basis, helder blauw als highlight */
+  --cig: #12306b;
+  --cig-2: #2b62d9;
+  --ink: #0a1020;
+  --success: #0f7a52;
+  --warning: #b26a05;
+  --gold-from: #e8c468;
+  --gold-to: #a07c12;
+  --gold: #8f6d10;
+  --bf: #c2306b;
 
-  /* Warm getinte schaduwen; zwart maakt alles meteen goedkoop. */
-  --shadow-xs: 0 1px 2px rgba(80, 45, 25, 0.05);
-  --shadow-sm: 0 1px 2px rgba(80, 45, 25, 0.06), 0 2px 6px rgba(80, 45, 25, 0.04);
-  --shadow-md: 0 2px 4px rgba(80, 45, 25, 0.05), 0 8px 20px -6px rgba(80, 45, 25, 0.1);
-  --shadow-lg: 0 4px 8px rgba(80, 45, 25, 0.06), 0 18px 40px -12px rgba(80, 45, 25, 0.16);
-  --grain-opacity: 0.035;
+  /* Koel getinte schaduwen passen bij een wit/blauw palet. */
+  --shadow-xs: 0 1px 2px rgba(10, 16, 32, 0.05);
+  --shadow-sm: 0 1px 2px rgba(10, 16, 32, 0.06), 0 2px 6px rgba(10, 16, 32, 0.04);
+  --shadow-md: 0 2px 4px rgba(10, 16, 32, 0.05), 0 10px 24px -8px rgba(10, 16, 32, 0.14);
+  --shadow-lg: 0 4px 10px rgba(10, 16, 32, 0.07), 0 22px 48px -16px rgba(10, 16, 32, 0.22);
+  --grain-opacity: 0;
 }
 
 .dark {
-  --background: #14100e;
-  --foreground: #f5ece4;
-  --card: #1e1816;
-  --card-foreground: #f5ece4;
-  --popover: #1e1816;
-  --popover-foreground: #f5ece4;
+  --background: #070b14;
+  --foreground: #eef2f8;
+  --card: #0e1524;
+  --card-foreground: #eef2f8;
+  --popover: #0e1524;
+  --popover-foreground: #eef2f8;
 
-  --primary: #ff5667;
-  --primary-foreground: #14100e;
-  --secondary: #2a2220;
-  --secondary-foreground: #f5ece4;
-  --muted: #262020;
-  --muted-foreground: #a99a8f;
-  --accent: #2f2724;
-  --accent-foreground: #f5ece4;
-  --destructive: #ff6274;
+  --primary: #5b8def;
+  --primary-foreground: #070b14;
+  --secondary: #162033;
+  --secondary-foreground: #eef2f8;
+  --muted: #141d2e;
+  --muted-foreground: #93a1b8;
+  --accent: #1a2640;
+  --accent-foreground: #eef2f8;
+  --destructive: #ef5a72;
 
-  --border: oklch(1 0 0 / 10%);
-  --input: oklch(1 0 0 / 14%);
-  --ring: #ff5667;
+  --border: oklch(1 0 0 / 11%);
+  --input: oklch(1 0 0 / 15%);
+  --ring: #5b8def;
 
-  --cig: #ff5667;
-  --cig-2: #ff9a55;
-  --ink: #f5ece4;
-  --success: #3fcb8b;
-  --warning: #f0b149;
-  --gold-from: #f3d27a;
-  --gold-to: #d9a521;
-  --gold: #e6c05a;
-  --bf: #ff7da5;
+  --cig: #5b8def;
+  --cig-2: #7aa5f5;
+  --ink: #eef2f8;
+  --success: #34c48a;
+  --warning: #e3a53a;
+  --gold-from: #e8c468;
+  --gold-to: #c9a02c;
+  --gold: #dcb954;
+  --bf: #e85f97;
 
-  --shadow-xs: 0 1px 2px rgba(0, 0, 0, 0.4);
-  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.45), 0 2px 6px rgba(0, 0, 0, 0.3);
-  --shadow-md: 0 2px 4px rgba(0, 0, 0, 0.4), 0 8px 20px -6px rgba(0, 0, 0, 0.55);
-  --shadow-lg: 0 4px 8px rgba(0, 0, 0, 0.45), 0 18px 40px -12px rgba(0, 0, 0, 0.6);
-  --grain-opacity: 0.05;
+  --shadow-xs: 0 1px 2px rgba(0, 0, 0, 0.5);
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.5), 0 2px 6px rgba(0, 0, 0, 0.35);
+  --shadow-md: 0 2px 4px rgba(0, 0, 0, 0.45), 0 10px 24px -8px rgba(0, 0, 0, 0.6);
+  --shadow-lg: 0 4px 10px rgba(0, 0, 0, 0.5), 0 22px 48px -16px rgba(0, 0, 0, 0.7);
+  --grain-opacity: 0.025;
 }
 
 @layer base {

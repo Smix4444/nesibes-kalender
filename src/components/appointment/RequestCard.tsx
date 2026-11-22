@@ -75,7 +75,7 @@ export function RequestCard({ appointment }: { appointment: AppointmentWithPeopl
 
         {appointment.status === "auction" ? (
           <Button
-            render={<Link href={`/auctions/${appointment.auction_id}`} />}
+            nativeButton={false} render={<Link href={`/auctions/${appointment.auction_id}`} />}
             className="h-11 w-full"
           >
             ⚔️ Naar de veiling

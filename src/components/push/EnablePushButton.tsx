@@ -50,7 +50,7 @@ export function EnablePushButton() {
 
   if (environment === "ios-needs-install") {
     return (
-      <Button render={<Link href="/install" />} variant="outline" className="h-12 w-full">
+      <Button nativeButton={false} render={<Link href="/install" />} variant="outline" className="h-12 w-full">
         📲 Zet eerst op je beginscherm
       </Button>
     );
