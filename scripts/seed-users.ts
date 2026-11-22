@@ -28,12 +28,17 @@ const admin = createClient<Database>(url, serviceKey, {
 
 // Vervang de e-mails door echte adressen als je wachtwoord-reset wil gebruiken.
 const users = [
-  { username: "nesibe", display_name: "Nesibe", email: "nesibe@example.com", password: "CigkofteQueen2026!", role: "owner",  emoji: "👑", color: "#D7263D" },
-  { username: "rayan",  display_name: "Rayan",  email: "rayan@example.com",  password: "DeBF2026!",          role: "admin",  emoji: "💞", color: "#FF5C8A" },
-  { username: "dragos", display_name: "Dragos", email: "dragos@example.com", password: "DragosVIP2026!",     role: "vip",    emoji: "⭐", color: "#D4A017" },
+  { username: "nesibe",   display_name: "Nesibe",   email: "nesibe@example.com",   password: "CigkofteQueen2026!", role: "owner",  emoji: "👑", color: "#D7263D" },
+  { username: "rayan",    display_name: "Rayan",    email: "rayan@example.com",    password: "DeBF2026!",          role: "admin",  emoji: "💞", color: "#FF5C8A" },
+  { username: "dragos",   display_name: "Dragos",   email: "dragos@example.com",   password: "DragosVIP2026!",     role: "vip",    emoji: "⭐", color: "#D4A017" },
+  { username: "melissa",  display_name: "Melissa",  email: "melissa@example.com",  password: "Melissa2026!",       role: "member", emoji: "🌸", color: "#C86FC9" },
+  { username: "tuana",    display_name: "Tuana",    email: "tuana@example.com",    password: "Tuana2026!",         role: "member", emoji: "🦊", color: "#E4572E" },
+  { username: "eray",     display_name: "Eray",     email: "eray@example.com",     password: "Eray2026!",          role: "member", emoji: "😎", color: "#5C7AEA" },
+  { username: "deepan",   display_name: "Deepan",   email: "deepan@example.com",   password: "Deepan2026!",        role: "member", emoji: "🔥", color: "#2BB673" },
+  { username: "selinofc", display_name: "Selin",    email: "selinofc@example.com", password: "Selin2026!",         role: "member", emoji: "🧋", color: "#9B5DE5" },
 ] as const;
 
-const roleBadge = { owner: "owner", admin: "bf", vip: "vip" } as const;
+const roleBadge: Record<string, string | null> = { owner: "owner", admin: "bf", vip: "vip", member: null };
 
 const sampleIdeas = [
   { title: "Kolonel Koffie proberen", category: "koffie", description: "Iedereen zegt dat de flat white daar top is." },
@@ -68,16 +73,20 @@ async function main() {
 
     await admin.from("profiles").update({ role: u.role, emoji: u.emoji, color: u.color }).eq("id", id);
 
-    const { data: hasBadge } = await admin
-      .from("user_badges")
-      .select("id")
-      .eq("user_id", id)
-      .eq("badge_code", roleBadge[u.role])
-      .is("period", null)
-      .maybeSingle();
+    // Alleen owner/admin/vip hebben een rolbadge.
+    const badge = roleBadge[u.role];
+    if (badge) {
+      const { data: hasBadge } = await admin
+        .from("user_badges")
+        .select("id")
+        .eq("user_id", id)
+        .eq("badge_code", badge)
+        .is("period", null)
+        .maybeSingle();
 
-    if (!hasBadge) {
-      await admin.from("user_badges").insert({ user_id: id, badge_code: roleBadge[u.role], period: null });
+      if (!hasBadge) {
+        await admin.from("user_badges").insert({ user_id: id, badge_code: badge, period: null });
+      }
     }
 
     if (u.role === "owner") ownerId = id;

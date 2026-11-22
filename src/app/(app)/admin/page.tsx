@@ -30,7 +30,7 @@ export default async function AdminPage() {
         <h1 className="font-heading text-2xl font-extrabold">Beheer 🛡️</h1>
         <p className="text-sm text-muted-foreground">
           {profile.role === "owner"
-            ? "Je kijkt mee; wijzigen doet Rayan."
+            ? "Jij en Rayan kunnen rollen, groepen en instellingen wijzigen."
             : "Rollen, munten, groepen en instellingen."}
         </p>
       </header>
@@ -40,7 +40,7 @@ export default async function AdminPage() {
         groups={groups}
         balances={balanceByUser}
         settings={settings}
-        readOnly={profile.role !== "admin"}
+        isAdmin={profile.role === "admin"}
         myId={profile.id}
       />
     </div>

@@ -35,14 +35,15 @@ export function AdminPanel({
   groups,
   balances,
   settings,
-  readOnly,
+  isAdmin,
   myId,
 }: {
   people: Person[];
   groups: Group[];
   balances: Record<string, number>;
   settings: Tables<"app_settings"> | null;
-  readOnly: boolean;
+  /** Rayan mag alles; Nesibe mag rollen, groepen en instellingen. */
+  isAdmin: boolean;
   myId: string;
 }) {
   return (
@@ -59,18 +60,18 @@ export function AdminPanel({
             key={person.id}
             person={person}
             balance={balances[person.id] ?? 0}
-            readOnly={readOnly}
+            isAdmin={isAdmin}
             isSelf={person.id === myId}
           />
         ))}
       </TabsContent>
 
       <TabsContent value="groups" className="space-y-3 pt-3">
-        <GroupEditor groups={groups} people={people} readOnly={readOnly} />
+        <GroupEditor groups={groups} people={people} readOnly={false} />
       </TabsContent>
 
       <TabsContent value="settings" className="space-y-3 pt-3">
-        <SettingsEditor settings={settings} readOnly={readOnly} />
+        <SettingsEditor settings={settings} readOnly={false} isAdmin={isAdmin} />
       </TabsContent>
     </Tabs>
   );
@@ -79,12 +80,12 @@ export function AdminPanel({
 function PersonRow({
   person,
   balance,
-  readOnly,
+  isAdmin,
   isSelf,
 }: {
   person: Person;
   balance: number;
-  readOnly: boolean;
+  isAdmin: boolean;
   isSelf: boolean;
 }) {
   const [pending, startTransition] = useTransition();
@@ -111,7 +112,7 @@ function PersonRow({
           </span>
         </div>
 
-        {!readOnly && !isOwner ? (
+        {!isOwner ? (
           <>
             <div className="flex gap-1.5">
               {ROLES.map((role) => (
@@ -131,6 +132,7 @@ function PersonRow({
               ))}
             </div>
 
+            {isAdmin ? (
             <div className="flex items-center gap-2">
               <Button
                 variant="outline"
@@ -167,6 +169,7 @@ function PersonRow({
                 </Button>
               ) : null}
             </div>
+            ) : null}
           </>
         ) : null}
       </CardContent>
@@ -296,9 +299,11 @@ function GroupEditor({
 function SettingsEditor({
   settings,
   readOnly,
+  isAdmin,
 }: {
   settings: Tables<"app_settings"> | null;
   readOnly: boolean;
+  isAdmin: boolean;
 }) {
   const [monthly, setMonthly] = useState(settings?.monthly_coins ?? 2);
   const [cap, setCap] = useState(settings?.coin_cap ?? 6);
@@ -367,7 +372,7 @@ function SettingsEditor({
         </CardContent>
       </Card>
 
-      {!readOnly ? (
+      {isAdmin ? (
         <Card>
           <CardContent className="space-y-2 py-4">
             <Label htmlFor="invite" className="text-xs">
