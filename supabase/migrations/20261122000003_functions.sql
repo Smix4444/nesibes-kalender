@@ -855,8 +855,9 @@ create or replace function public.create_group_activity(
   p_title text,
   p_category appt_category,
   p_description text,
-  p_starts_at timestamptz,
-  p_ends_at timestamptz,
+  -- null als er een datumpoll loopt: dan kiest de groep het moment nog
+  p_starts_at timestamptz default null,
+  p_ends_at timestamptz default null,
   p_location_name text default null,
   p_location_address text default null,
   p_lat double precision default null,

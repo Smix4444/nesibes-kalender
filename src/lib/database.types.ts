@@ -817,7 +817,7 @@ export type Database = {
       check_invite_code: { Args: { p_code: string }; Returns: boolean };
       close_auction: { Args: { p_auction: string; p_winner: string; p_also_accept?: string[] }; Returns: undefined };
       counter_propose: { Args: { p_id: string; p_starts: string; p_ends: string; p_message?: string }; Returns: string };
-      create_group_activity: { Args: { p_title: string; p_category: Database["public"]["Enums"]["appt_category"]; p_description: string; p_starts_at: string; p_ends_at: string; p_location_name?: string; p_location_address?: string; p_lat?: number; p_lng?: number; p_user_ids?: string[]; p_group_ids?: string[]; p_poll_options?: Json; p_poll_closes_at?: string }; Returns: string };
+      create_group_activity: { Args: { p_title: string; p_category: Database["public"]["Enums"]["appt_category"]; p_description: string; p_starts_at?: string; p_ends_at?: string; p_location_name?: string; p_location_address?: string; p_lat?: number; p_lng?: number; p_user_ids?: string[]; p_group_ids?: string[]; p_poll_options?: Json; p_poll_closes_at?: string }; Returns: string };
       end_series: { Args: { p_series: string }; Returns: undefined };
       finalize_poll: { Args: { p_id: string; p_option: string }; Returns: undefined };
       get_busy_slots: { Args: { p_from: string; p_to: string }; Returns: { starts_at: string; ends_at: string }[] };
