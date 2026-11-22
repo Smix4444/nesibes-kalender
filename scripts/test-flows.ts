@@ -7,7 +7,11 @@
  * sessie en ruimt daarna alles weer op. Draai dit op een database die je mag
  * vervuilen — het raakt de echte accounts niet aan, maar maakt wel afspraken.
  */
-import "dotenv/config";
+import { config as loadEnv } from "dotenv";
+
+// dotenv/config leest alleen .env; Next gebruikt .env.local, dus beide laden.
+loadEnv({ path: ".env.local", quiet: true });
+loadEnv({ quiet: true });
 import { createClient, type SupabaseClient } from "@supabase/supabase-js";
 import type { Database } from "../src/lib/database.types";
 
@@ -25,6 +29,10 @@ const admin = createClient<Database>(url, serviceKey, {
 });
 
 type Client = SupabaseClient<Database>;
+
+// Nesibe's acties moeten met haar eigen sessie: de RPC's kijken naar
+// auth.uid(), en dat is leeg als je de service-role gebruikt.
+const OWNER = { email: "nesibe@example.com", password: "CigkofteQueen2026!" };
 
 const TEST_USERS = [
   { username: "test_a", email: "test_a@nesiplan.test", password: "TestFlow2026!a" },
@@ -120,8 +128,14 @@ async function main() {
     signIn(TEST_USERS[1].email, TEST_USERS[1].password),
   ]);
 
-  // Nesibe heeft geen wachtwoord dat we hier kennen: haar acties draaien via
-  // de service-role, die RLS omzeilt maar wel dezelfde RPC's aanroept.
+  let nesibe: Client;
+  try {
+    nesibe = await signIn(OWNER.email, OWNER.password);
+  } catch {
+    console.error(`Kon niet inloggen als ${OWNER.email}. Draai eerst: npm run seed`);
+    process.exit(1);
+  }
+
   const createdAppointments: string[] = [];
 
   try {
@@ -187,7 +201,13 @@ async function main() {
     const afterSpend = await balanceOf(a, ids[0]);
     check("priority kost 1 çiğköfte", !err2 && afterSpend === before - 1, `${before} -> ${afterSpend}`);
 
-    await admin.rpc("respond_appointment", { p_id: id2!, p_action: "decline", p_reason: "Test" });
+    const { error: declineError } = await nesibe.rpc("respond_appointment", {
+      p_id: id2!,
+      p_action: "decline",
+      p_reason: "Test",
+    });
+    check("Nesibe kan weigeren", !declineError, declineError?.message);
+
     const afterRefund = await balanceOf(a, ids[0]);
     check("weigeren betaalt de munt terug", afterRefund === before, `${afterSpend} -> ${afterRefund}`);
 
@@ -235,12 +255,13 @@ async function main() {
         .order("updated_at");
       check("bij gelijk bod staat het oudste bod bovenaan", bids?.[0]?.user_id === ids[0]);
 
-      // Nesibe kiest test_b (het lagere/latere bod mag ook).
-      await admin.rpc("close_auction", {
+      // Nesibe kiest test_b (een lager of later bod mag ook).
+      const { error: closeError } = await nesibe.rpc("close_auction", {
         p_auction: auctionId,
         p_winner: idB!,
         p_also_accept: [],
       });
+      check("Nesibe kan de veiling sluiten", !closeError, closeError?.message);
 
       const refunded = await balanceOf(a, ids[0]);
       const winnerBalance = await balanceOf(b, ids[1]);

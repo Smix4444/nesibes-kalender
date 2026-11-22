@@ -10,7 +10,11 @@
  * leukigheid" in de code — hou de repo dus private. De service-role key komt
  * wel uit .env.local en staat nooit in de code.
  */
-import "dotenv/config";
+import { config as loadEnv } from "dotenv";
+
+// dotenv/config leest alleen .env; Next gebruikt .env.local, dus beide laden.
+loadEnv({ path: ".env.local", quiet: true });
+loadEnv({ quiet: true });
 import { createClient } from "@supabase/supabase-js";
 import type { Database } from "../src/lib/database.types";
 
