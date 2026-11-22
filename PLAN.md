@@ -1245,14 +1245,14 @@ Voor Nesibe wordt 💡 vervangen door 📥 **Inbox** met een teller (ideeën sta
 | **3. Auth & profielen** ✅ | Supabase SSR-clients, middleware/proxy, register met uitnodigingscode, login met gebruikersnaam of e-mail, profielpagina, `scripts/seed-users.ts` | Nesibe/Rayan/Dragos kunnen inloggen met de juiste rol en badge; nieuwe gebruiker krijgt 2 munten |
 | **4. Beschikbaarheid & agenda** ✅ | `/availability`, `/planning` (taken + blokken), `get_busy_slots`, `lib/availability.ts` + tests, Agenda dag/week/maand, Home-strip "Is Nesibe vrij?" | Vrienden zien alleen vrij/bezet; Nesibe ziet alles; een blok maakt haar bezet |
 | **5. Aanvragen & inbox** ✅ | Wizard (zonder locatie), `request_appointment`, `respond_appointment`, tegenvoorstel-flow, annuleren, Inbox met prioriteitssortering, detailpagina, in-app meldingen | Volledige flow aanvraag → tegenvoorstel → accept werkt; sortering Rayan > Dragos > priority > oud |
-| **6. Munten & veilingen** | Priority-kost, `/wallet` + scorebord, veilinglogica (8.5), `/auctions/[id]` met Realtime | Twee aanvragen op dezelfde dag → veiling; biedingen houden munten vast; Nesibe kiest; verliezers terugbetaald; Dragos wint een gelijk bod van een member |
-| **7. Groepen & polls** | Groepenbeheer (admin), groepswizard met tags, RSVP, datumpoll + finalize | Getagde mensen zien de activiteit, niet-getagden niet |
-| **8. Pushmeldingen** | VAPID, `/api/push/*`, pg_net-trigger, `private.config` invullen (vraag Rayan), EnablePushButton, herinneringen-cron | Op een echte iPhone (geïnstalleerde PWA) en Android komt een melding binnen bij een nieuwe aanvraag en bij een herinnering |
-| **9. Locatie** | `/api/geocode`, LocationPicker, MiniMap, routeknoppen, favoriete plekken | Een plek zoeken, kiezen, bewaren en openen in Google Maps/Waze werkt |
-| **10. Vrij vandaag & reeksen** | `broadcast_free_today` + banner + prefill, reeksen (request/respond/generate/end) | Nesibe's oproep geeft een push + banner; een wekelijkse reeks verschijnt 8 weken vooruit |
-| **11. Ideeën & album** | `/ideas` met stemmen en "Plan dit!", storage-buckets, album met compressie en viewer | Ideeën stemmen/plannen werkt; foto's alleen zichtbaar voor deelnemers |
-| **12. Check-in, badges & Wrapped** | Check-in, badge-jobs, `/badges`, Wrapped-berekening + stories-UI + delen | `select private.job_monthly_wrapped()` handmatig uitvoeren geeft correcte Wrapped voor testdata |
-| **13. Agenda-sync** | `/api/calendar/[token]`, instellingenpagina | Abonneren in Google Calendar en Apple Agenda toont de juiste afspraken |
+| **6. Munten & veilingen** ✅ | Priority-kost, `/wallet` + scorebord, veilinglogica (8.5), `/auctions/[id]` met Realtime | Twee aanvragen op dezelfde dag → veiling; biedingen houden munten vast; Nesibe kiest; verliezers terugbetaald; Dragos wint een gelijk bod van een member |
+| **7. Groepen & polls** ✅ | Groepenbeheer (admin), groepswizard met tags, RSVP, datumpoll + finalize | Getagde mensen zien de activiteit, niet-getagden niet |
+| **8. Pushmeldingen** ✅ | VAPID, `/api/push/*`, pg_net-trigger, `private.config` invullen (vraag Rayan), EnablePushButton, herinneringen-cron | Op een echte iPhone (geïnstalleerde PWA) en Android komt een melding binnen bij een nieuwe aanvraag en bij een herinnering |
+| **9. Locatie** ✅ | `/api/geocode`, LocationPicker, MiniMap, routeknoppen, favoriete plekken | Een plek zoeken, kiezen, bewaren en openen in Google Maps/Waze werkt |
+| **10. Vrij vandaag & reeksen** ✅ | `broadcast_free_today` + banner + prefill, reeksen (request/respond/generate/end) | Nesibe's oproep geeft een push + banner; een wekelijkse reeks verschijnt 8 weken vooruit |
+| **11. Ideeën & album** ✅ | `/ideas` met stemmen en "Plan dit!", storage-buckets, album met compressie en viewer | Ideeën stemmen/plannen werkt; foto's alleen zichtbaar voor deelnemers |
+| **12. Check-in, badges & Wrapped** ✅ | Check-in, badge-jobs, `/badges`, Wrapped-berekening + stories-UI + delen | `select private.job_monthly_wrapped()` handmatig uitvoeren geeft correcte Wrapped voor testdata |
+| **13. Agenda-sync** ✅ | `/api/calendar/[token]`, instellingenpagina | Abonneren in Google Calendar en Apple Agenda toont de juiste afspraken |
 | **14. Afwerking** | Lege staten, skeletons, confetti, toegankelijkheid, Lighthouse-check (PWA/perf), `scripts/test-flows.ts`, README met uitleg | Lighthouse ≥ 90 op mobiel voor performance en best practices; alle flows uit sectie 16 slagen |
 
 ---

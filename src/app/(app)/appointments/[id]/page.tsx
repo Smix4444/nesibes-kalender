@@ -7,6 +7,9 @@ import { AppointmentActions } from "@/components/appointment/AppointmentActions"
 import { RsvpBar } from "@/components/appointment/RsvpBar";
 import { PollBox } from "@/components/appointment/PollBox";
 import { CounterBox } from "@/components/appointment/CounterBox";
+import { MemoryAlbum, type MemoryItem } from "@/components/appointment/MemoryAlbum";
+import { RouteButtons } from "@/components/map/RouteButtons";
+import { AppointmentMap } from "@/components/map/AppointmentMap";
 import { Card, CardContent } from "@/components/ui/card";
 import { requireProfile } from "@/lib/auth";
 import { getAppointment } from "@/lib/data";
@@ -43,6 +46,33 @@ export default async function AppointmentPage({ params }: PageProps<"/appointmen
       ? supabase.from("poll_votes").select("option_id, user_id, vote")
       : Promise.resolve({ data: [] as never[] }),
   ]);
+
+  // Album: alleen voor een voorbije, bevestigde afspraak.
+  const isPast =
+    appointment.status === "accepted" &&
+    appointment.starts_at !== null &&
+    new Date(appointment.starts_at) < new Date();
+
+  let memories: MemoryItem[] = [];
+  if (isPast) {
+    const { data: rows } = await supabase
+      .from("memories")
+      .select("id, storage_path, caption, user_id")
+      .eq("appointment_id", id)
+      .order("created_at");
+
+    if (rows?.length) {
+      // Prive-bucket: links zijn een uur geldig.
+      const { data: signed } = await supabase.storage
+        .from("memories")
+        .createSignedUrls(rows.map((r) => r.storage_path), 3600);
+
+      memories = rows.map((row, index) => ({
+        ...row,
+        url: signed?.[index]?.signedUrl ?? "",
+      }));
+    }
+  }
 
   return (
     <div className="space-y-4">
@@ -93,6 +123,13 @@ export default async function AppointmentPage({ params }: PageProps<"/appointmen
         </CardContent>
       </Card>
 
+      {appointment.lat !== null && appointment.lng !== null ? (
+        <section className="space-y-2">
+          <AppointmentMap lat={appointment.lat} lng={appointment.lng} />
+          <RouteButtons lat={appointment.lat} lng={appointment.lng} />
+        </section>
+      ) : null}
+
       {counter && isCreator ? <CounterBox counter={counter} /> : null}
 
       {appointment.has_poll && options && options.length > 0 ? (
@@ -131,6 +168,15 @@ export default async function AppointmentPage({ params }: PageProps<"/appointmen
 
       {me && appointment.type === "group" && appointment.status !== "cancelled" ? (
         <RsvpBar appointmentId={id} current={me.rsvp} />
+      ) : null}
+
+      {isPast ? (
+        <MemoryAlbum
+          appointmentId={id}
+          memories={memories}
+          canUpload={Boolean(me)}
+          myId={profile.id}
+        />
       ) : null}
 
       <AppointmentActions

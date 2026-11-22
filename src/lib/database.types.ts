@@ -833,6 +833,7 @@ export type Database = {
       respond_series: { Args: { p_series: string; p_accept: boolean }; Returns: undefined };
       role_weight: { Args: { r: Database["public"]["Enums"]["app_role"] }; Returns: number };
       rsvp: { Args: { p_id: string; p_status: Database["public"]["Enums"]["rsvp_status"] }; Returns: undefined };
+      set_invite_code: { Args: { p_code: string }; Returns: undefined };
       username_to_email: { Args: { p_username: string }; Returns: string };
       vote_poll: { Args: { p_option: string; p_vote: Database["public"]["Enums"]["poll_vote_value"] }; Returns: undefined };
     };

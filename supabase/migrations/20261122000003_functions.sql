@@ -1383,6 +1383,18 @@ language sql stable security definer set search_path = public, private as $$
   )
 $$;
 
+/** De uitnodigingscode leeft in private.config, buiten het bereik van de API. */
+create or replace function public.set_invite_code(p_code text)
+returns void
+language plpgsql security definer set search_path = public, private as $$
+begin
+  if my_role() <> 'admin' then raise exception 'Alleen Rayan mag de code wijzigen 🛡️'; end if;
+  if char_length(trim(p_code)) < 4 then raise exception 'Minstens 4 tekens graag'; end if;
+
+  insert into private.config (key, value) values ('invite_code', trim(p_code))
+  on conflict (key) do update set value = excluded.value;
+end $$;
+
 -- ------------------------------------------------------------------ grants --
 
 -- Standaard dicht: niets uitvoerbaar voor anon of publiek.
