@@ -1239,8 +1239,8 @@ Voor Nesibe wordt 💡 vervangen door 📥 **Inbox** met een teller (ideeën sta
 
 | Fase | Inhoud | Klaar wanneer… |
 |---|---|---|
-| **0. Setup** | Next.js + Tailwind + shadcn, scripts `typecheck`/`test`, `.env.example`, `.gitignore`, GitHub-repo (private), `CLAUDE.md` + `PLAN.md` in de repo, Supabase CLI init + link, GitHub Action | Repo staat op GitHub, Rayan heeft het project in Vercel geïmporteerd, de lege app draait op de Vercel-URL |
-| **1. Basis-UI & PWA** | Fonts, thema/dark mode, bottom nav, layouts, manifest, iconen, `sw.js`-registratie, `/install` | De app is installeerbaar op Android en iPhone en opent standalone |
+| **0. Setup** ✅ | Next.js + Tailwind + shadcn, scripts `typecheck`/`test`, `.env.example`, `.gitignore`, GitHub-repo (private), `CLAUDE.md` + `PLAN.md` in de repo, Supabase CLI init + link, GitHub Action | Repo staat op GitHub, Rayan heeft het project in Vercel geïmporteerd, de lege app draait op de Vercel-URL |
+| **1. Basis-UI & PWA** ✅ | Fonts, thema/dark mode, bottom nav, layouts, manifest, iconen, `sw.js`-registratie, `/install` | De app is installeerbaar op Android en iPhone en opent standalone |
 | **2. Database** | Migrations 1–6 (schema, RLS, functies — eerst de helpers, trigger, notify en beschikbaarheid —, cron, storage, seed data), types genereren | `supabase db push` slaagt; in de dashboard staat RLS overal aan; cron jobs zichtbaar |
 | **3. Auth & profielen** | Supabase SSR-clients, middleware/proxy, register met uitnodigingscode, login met gebruikersnaam of e-mail, profielpagina, `scripts/seed-users.ts` | Nesibe/Rayan/Dragos kunnen inloggen met de juiste rol en badge; nieuwe gebruiker krijgt 2 munten |
 | **4. Beschikbaarheid & agenda** | `/availability`, `/planning` (taken + blokken), `get_busy_slots`, `lib/availability.ts` + tests, Agenda dag/week/maand, Home-strip "Is Nesibe vrij?" | Vrienden zien alleen vrij/bezet; Nesibe ziet alles; een blok maakt haar bezet |
