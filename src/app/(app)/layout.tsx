@@ -13,7 +13,7 @@ export default async function AppLayout({ children }: LayoutProps<"/">) {
   return (
     <div className="flex min-h-dvh flex-col">
       <AppHeader unreadCount={unread} />
-      <main className="mx-auto w-full max-w-md flex-1 px-4 pt-4 pb-28">{children}</main>
+      <main className="relative z-10 mx-auto w-full max-w-md flex-1 px-5 pt-6 pb-32">{children}</main>
       <BottomNav role={profile.role} inboxCount={inbox} />
     </div>
   );

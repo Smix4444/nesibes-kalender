@@ -1,11 +1,13 @@
 import Link from "next/link";
+import { ArrowUpRight } from "lucide-react";
 import { AppointmentCard } from "@/components/appointment/AppointmentCard";
 import { RequestCard } from "@/components/appointment/RequestCard";
 import { DayStrip } from "@/components/agenda/DayStrip";
 import { FreeTodaySheet } from "@/components/agenda/FreeTodaySheet";
 import { FreeTodayBanner } from "@/components/agenda/FreeTodayBanner";
+import { EmptyState } from "@/components/common/EmptyState";
+import { Section } from "@/components/common/Section";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card";
 import { requireProfile } from "@/lib/auth";
 import {
   getActiveFreeToday,
@@ -17,11 +19,10 @@ import {
   getMyAppointments,
   getOwnerItems,
 } from "@/lib/data";
-import { dayKey, dayRange, fmtTime, nextDays } from "@/lib/dates";
+import { dayKey, dayRange, fmt, fmtTime, nextDays } from "@/lib/dates";
 import { COIN_EMOJI, DAY_STRIP_DAYS } from "@/lib/config";
 
-/** Afspraken tot een uur terug blijven staan; losgetrokken zodat de
- *  purity-regel van React niet over een Date.now() in de render valt. */
+/** Losgetrokken zodat React's purity-regel niet over Date.now() valt. */
 function recentCutoff(): Date {
   return new Date(Date.now() - 60 * 60 * 1000);
 }
@@ -29,6 +30,21 @@ function recentCutoff(): Date {
 export default async function HomePage() {
   const profile = await requireProfile();
   return profile.role === "owner" ? <OwnerHome name={profile.display_name} /> : <FriendHome />;
+}
+
+function Greeting({ name, emoji }: { name: string; emoji: string }) {
+  const today = new Date();
+  return (
+    <div className="animate-rise">
+      <p className="label-eyebrow">{fmt(today, "EEEE d MMMM")}</p>
+      <h1 className="mt-1 font-heading text-[32px] leading-[1.1] font-extrabold">
+        Hoi {name}{" "}
+        <span className="inline-block align-baseline" aria-hidden>
+          {emoji}
+        </span>
+      </h1>
+    </div>
+  );
 }
 
 // ----------------------------------------------------------- Nesibe 👑 ----
@@ -52,34 +68,30 @@ async function OwnerHome({ name }: { name: string }) {
       new Date(a.starts_at) < to,
   );
   const openTasks = items.tasks.filter((t) => !t.done).slice(0, 5);
+  const dayItems = [
+    ...items.blocks.map((b) => ({ kind: "block" as const, at: b.starts_at!, item: b })),
+    ...todayAppointments.map((a) => ({ kind: "appt" as const, at: a.starts_at!, item: a })),
+  ].sort((a, b) => new Date(a.at).getTime() - new Date(b.at).getTime());
 
   return (
-    <div className="space-y-5">
-      <header>
-        <h1 className="font-heading text-2xl font-extrabold">Hoi {name} 👑</h1>
-        <p className="text-sm text-muted-foreground">
-          {new Intl.DateTimeFormat("nl-BE", { dateStyle: "full", timeZone: "Europe/Brussels" }).format(
-            new Date(),
-          )}
-        </p>
-      </header>
+    <div className="space-y-8">
+      <Greeting name={name} emoji="👑" />
 
       <FreeTodaySheet groups={groups} />
 
-      <section className="space-y-2">
-        <div className="flex items-center justify-between">
-          <h2 className="font-heading font-bold">Aanvragen ({requests.length})</h2>
-          {requests.length > 3 ? (
-            <Link href="/inbox" className="text-sm font-semibold text-cig">
-              Alles zien
-            </Link>
-          ) : null}
-        </div>
-
+      <Section
+        label={requests.length ? `Inbox · ${requests.length}` : "Inbox"}
+        action={requests.length > 3 ? "Alles" : undefined}
+        actionHref="/inbox"
+      >
         {requests.length === 0 ? (
-          <Empty>Geen openstaande aanvragen. Rustig aan 🧘‍♀️</Empty>
+          <div className="surface">
+            <EmptyState icon="✦" title="Lege inbox">
+              Geen openstaande aanvragen. Lekker rustig.
+            </EmptyState>
+          </div>
         ) : (
-          <ul className="space-y-3">
+          <ul className="stagger space-y-3">
             {requests.slice(0, 3).map((request) => (
               <li key={request.id}>
                 <RequestCard appointment={request} />
@@ -87,59 +99,62 @@ async function OwnerHome({ name }: { name: string }) {
             ))}
           </ul>
         )}
-      </section>
+      </Section>
 
-      <section className="space-y-2">
-        <h2 className="font-heading font-bold">Mijn dag</h2>
-        {todayAppointments.length === 0 && items.blocks.length === 0 ? (
-          <Empty>Niets gepland vandaag ✨</Empty>
+      <Section label="Mijn dag">
+        {dayItems.length === 0 ? (
+          <div className="surface">
+            <EmptyState icon="☀" title="Niets gepland">
+              De dag is helemaal van jou.
+            </EmptyState>
+          </div>
         ) : (
-          <ul className="space-y-2">
-            {items.blocks.map((block) => (
-              <li
-                key={block.id}
-                className="flex items-center gap-3 rounded-xl border border-dashed border-border bg-muted/40 px-3 py-2.5"
-              >
-                <span className="text-sm font-semibold">⛔ {block.title}</span>
-                <span className="ml-auto text-xs text-muted-foreground">
-                  {block.starts_at ? fmtTime(block.starts_at) : ""}
-                </span>
-              </li>
-            ))}
-            {todayAppointments.map((appt) => (
-              <li key={appt.id}>
-                <AppointmentCard appointment={appt} viewerId="" />
-              </li>
-            ))}
+          <ul className="stagger space-y-2">
+            {dayItems.map(({ kind, item }) =>
+              kind === "block" ? (
+                <li
+                  key={item.id}
+                  className="flex items-center gap-3 rounded-xl border border-dashed border-border bg-muted/30 px-3.5 py-3"
+                >
+                  <span className="label-eyebrow w-11 shrink-0 text-[10px]">
+                    {fmtTime(item.starts_at!)}
+                  </span>
+                  <span className="truncate text-sm font-semibold text-muted-foreground">
+                    {item.title}
+                  </span>
+                </li>
+              ) : (
+                <li key={item.id}>
+                  <AppointmentCard
+                    appointment={item as Parameters<typeof AppointmentCard>[0]["appointment"]}
+                    viewerId=""
+                  />
+                </li>
+              ),
+            )}
           </ul>
         )}
-      </section>
+      </Section>
 
-      <section className="space-y-2">
-        <div className="flex items-center justify-between">
-          <h2 className="font-heading font-bold">Taken</h2>
-          <Link href="/planning" className="text-sm font-semibold text-cig">
-            Planning
-          </Link>
-        </div>
+      <Section label="Taken" action="Planning" actionHref="/planning">
         {openTasks.length === 0 ? (
-          <Empty>Geen open taken 🎉</Empty>
+          <div className="surface">
+            <EmptyState icon="✓" title="Alles afgevinkt" />
+          </div>
         ) : (
-          <ul className="space-y-1">
+          <ul className="surface divide-y divide-border px-4">
             {openTasks.map((task) => (
-              <li
-                key={task.id}
-                className="rounded-xl border border-border bg-card px-3 py-2.5 text-sm font-medium"
-              >
-                ☐ {task.title}
+              <li key={task.id} className="flex items-center gap-3 py-3">
+                <span className="size-1.5 shrink-0 rounded-full bg-cig" aria-hidden />
+                <span className="flex-1 truncate text-sm font-medium">{task.title}</span>
                 {task.due_date ? (
-                  <span className="ml-2 text-xs text-muted-foreground">tegen {task.due_date}</span>
+                  <span className="label-eyebrow text-[10px]">{task.due_date.slice(5)}</span>
                 ) : null}
               </li>
             ))}
           </ul>
         )}
-      </section>
+      </Section>
     </div>
   );
 }
@@ -161,9 +176,7 @@ async function FriendHome() {
   ]);
 
   const cutoff = recentCutoff();
-  const mine = appointments.filter(
-    (a) => !a.starts_at || new Date(a.starts_at) >= cutoff,
-  );
+  const mine = appointments.filter((a) => !a.starts_at || new Date(a.starts_at) >= cutoff);
   const needsAnswer = mine.filter(
     (a) =>
       a.type === "group" &&
@@ -171,61 +184,73 @@ async function FriendHome() {
   );
 
   return (
-    <div className="space-y-5">
-      <header className="flex items-start justify-between gap-3">
-        <div>
-          <h1 className="font-heading text-2xl font-extrabold">
-            Hoi {profile.display_name} {profile.emoji}
-          </h1>
-          <p className="text-sm text-muted-foreground">Zin om iets te plannen?</p>
-        </div>
+    <div className="space-y-8">
+      <div className="flex items-start justify-between gap-4">
+        <Greeting name={profile.display_name} emoji={profile.emoji} />
         <Link
           href="/wallet"
-          className="shrink-0 rounded-full bg-cig/10 px-3 py-1.5 text-sm font-bold text-cig"
+          aria-label={`${balance} çiğköftes, naar je portemonnee`}
+          className="mt-1 flex shrink-0 items-center gap-1.5 rounded-full border border-border bg-card px-3 py-2 shadow-warm-sm transition-transform active:scale-95"
         >
-          {COIN_EMOJI} {balance}
+          <span aria-hidden>{COIN_EMOJI}</span>
+          <span className="display-xl text-base">{balance}</span>
         </Link>
-      </header>
+      </div>
 
       {freeToday ? <FreeTodayBanner freeToday={freeToday} /> : null}
 
-      <section className="space-y-2">
-        <h2 className="font-heading font-bold">Is Nesibe vrij?</h2>
+      <Section label="Is Nesibe vrij?" action="Agenda" actionHref="/agenda">
         <DayStrip days={days.slice(0, 7)} rules={rules} busy={busy} />
-      </section>
+      </Section>
 
-      <Card className="overflow-hidden border-0 bg-linear-to-br from-cig-2 to-cig text-white">
-        <CardContent className="space-y-3 py-5">
-          <p className="font-heading text-lg font-extrabold">Vraag een moment aan ☕</p>
-          <Button
-            render={<Link href="/new" />}
-            variant="secondary"
-            className="h-11 w-full font-bold"
-          >
-            Nieuwe aanvraag
-          </Button>
-        </CardContent>
-      </Card>
+      {/* Geen gradient: één volvlak rood leest rustiger en duurder. */}
+      <Link
+        href="/new"
+        className="group relative block overflow-hidden rounded-3xl bg-cig p-6 text-white shadow-warm-lg transition-transform duration-200 active:scale-[0.98]"
+      >
+        <span
+          className="absolute -top-12 -right-10 size-44 rotate-[-20deg] rounded-[45%] bg-white/10"
+          aria-hidden
+        />
+        <p className="label-eyebrow text-white/70">Zin om af te spreken?</p>
+        <p className="mt-2 max-w-[16ch] font-heading text-2xl leading-tight font-extrabold">
+          Vraag een moment aan
+        </p>
+        <span className="mt-5 inline-flex items-center gap-2 rounded-full bg-white px-4 py-2.5 text-sm font-bold text-cig">
+          Nieuwe aanvraag
+          <ArrowUpRight className="size-4 transition-transform duration-200 group-active:translate-x-0.5 group-active:-translate-y-0.5" />
+        </span>
+      </Link>
 
       {needsAnswer.length > 0 ? (
-        <section className="space-y-2">
-          <h2 className="font-heading font-bold">Wacht op jouw antwoord</h2>
-          <ul className="space-y-2">
+        <Section label="Wacht op jou">
+          <ul className="stagger space-y-2.5">
             {needsAnswer.map((appt) => (
               <li key={appt.id}>
                 <AppointmentCard appointment={appt} viewerId={profile.id} />
               </li>
             ))}
           </ul>
-        </section>
+        </Section>
       ) : null}
 
-      <section className="space-y-2">
-        <h2 className="font-heading font-bold">Mijn afspraken</h2>
+      <Section label="Jouw afspraken">
         {mine.length === 0 ? (
-          <Empty>Nog geen afspraken… tijd voor koffie? ☕</Empty>
+          <div className="surface">
+            <EmptyState
+              icon="☕"
+              title="Nog niets gepland"
+              action={
+                <Button render={<Link href="/new" />} className="h-11 px-5 font-bold">
+                  Plan iets leuks
+                </Button>
+              }
+            >
+              Tijd voor koffie met Nesibe?
+            </EmptyState>
+          </div>
         ) : (
-          <ul className="space-y-2">
+          <ul className="stagger space-y-2.5">
             {mine.slice(0, 8).map((appt) => (
               <li key={appt.id}>
                 <AppointmentCard appointment={appt} viewerId={profile.id} />
@@ -233,15 +258,7 @@ async function FriendHome() {
             ))}
           </ul>
         )}
-      </section>
+      </Section>
     </div>
-  );
-}
-
-function Empty({ children }: { children: React.ReactNode }) {
-  return (
-    <p className="rounded-2xl border border-dashed border-border px-4 py-8 text-center text-sm text-muted-foreground">
-      {children}
-    </p>
   );
 }

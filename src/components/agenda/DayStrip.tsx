@@ -25,23 +25,35 @@ export function DayStrip({
   onSelect?: (day: string) => void;
 }) {
   return (
-    <ul className="no-scrollbar -mx-4 flex gap-2 overflow-x-auto px-4 pb-1">
-      {days.map((day) => {
+    <ul className="no-scrollbar -mx-5 flex gap-2 overflow-x-auto px-5 pb-1">
+      {days.map((day, index) => {
         const ratio = freeRatio(day, rules, busy);
-        const isToday = day === days[0];
+        const isToday = index === 0;
         const active = selected === day;
+        const busyDay = ratio === 0;
 
         const content = (
           <>
-            <span className="text-[11px] font-medium text-muted-foreground uppercase">
-              {isToday ? "vandaag" : fmt(`${day}T12:00:00Z`, "EEE")}
+            <span
+              className={cn(
+                "text-[10px] font-bold tracking-[0.1em] uppercase",
+                active ? "text-white/70" : "text-muted-foreground",
+              )}
+            >
+              {isToday ? "vandaag" : fmt(`${day}T12:00:00Z`, "EEEEEE")}
             </span>
-            <span className="font-heading text-lg leading-none font-extrabold">
-              {Number(day.slice(8, 10))}
-            </span>
-            <span className="mt-1 block h-1.5 w-full overflow-hidden rounded-full bg-muted">
+            <span className="display-xl mt-1.5 text-[22px]">{Number(day.slice(8, 10))}</span>
+            <span
+              className={cn(
+                "mt-2 block h-1 w-full overflow-hidden rounded-full",
+                active ? "bg-white/25" : "bg-muted",
+              )}
+            >
               <span
-                className={cn("block h-full rounded-full", ratio > 0 ? "bg-success" : "bg-transparent")}
+                className={cn(
+                  "block h-full rounded-full transition-all duration-500",
+                  active ? "bg-white" : busyDay ? "bg-transparent" : "bg-success",
+                )}
                 style={{ width: `${Math.round(ratio * 100)}%` }}
               />
             </span>
@@ -49,29 +61,23 @@ export function DayStrip({
         );
 
         const className = cn(
-          "flex min-h-16 w-14 shrink-0 flex-col items-center rounded-xl border px-2 py-2 transition-colors",
-          active ? "border-cig bg-cig/10" : "border-border bg-card",
-          ratio === 0 && "opacity-50",
+          "flex min-h-[74px] w-[52px] shrink-0 flex-col items-center rounded-2xl border px-2 py-2.5 transition-all duration-200 active:scale-95",
+          active
+            ? "border-cig bg-cig text-white shadow-warm-md"
+            : "border-border bg-card shadow-warm-sm",
+          busyDay && !active && "opacity-45",
         );
+
+        const label = `${fmt(`${day}T12:00:00Z`, "EEEE d MMMM")}, ${busyDay ? "bezet" : "vrij"}`;
 
         return (
           <li key={day}>
             {onSelect ? (
-              <button
-                type="button"
-                onClick={() => onSelect(day)}
-                aria-pressed={active}
-                aria-label={`${fmt(`${day}T12:00:00Z`, "EEEE d MMMM")}, ${ratio === 0 ? "bezet" : "vrij"}`}
-                className={className}
-              >
+              <button type="button" onClick={() => onSelect(day)} aria-pressed={active} aria-label={label} className={className}>
                 {content}
               </button>
             ) : (
-              <Link
-                href={`${hrefBase}${day}`}
-                aria-label={`${fmt(`${day}T12:00:00Z`, "EEEE d MMMM")}, ${ratio === 0 ? "bezet" : "vrij"}`}
-                className={className}
-              >
+              <Link href={`${hrefBase}${day}`} aria-label={label} className={className}>
                 {content}
               </Link>
             )}

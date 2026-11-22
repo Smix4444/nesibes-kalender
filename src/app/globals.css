@@ -33,6 +33,7 @@
   /* ---- NesiPlan merkkleuren ---- */
   --color-cig: var(--cig);
   --color-cig-2: var(--cig-2);
+  --color-ink: var(--ink);
   --color-success: var(--success);
   --color-warning: var(--warning);
   --color-gold: var(--gold);
@@ -47,73 +48,100 @@
   --radius-2xl: calc(var(--radius) * 1.8);
   --radius-3xl: calc(var(--radius) * 2.2);
   --radius-4xl: calc(var(--radius) * 2.6);
+
+  --animate-rise: rise 0.45s cubic-bezier(0.22, 1, 0.36, 1) both;
+  --animate-pop: pop 0.3s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+}
+
+@keyframes rise {
+  from { opacity: 0; transform: translateY(10px); }
+  to   { opacity: 1; transform: none; }
+}
+@keyframes pop {
+  from { opacity: 0; transform: scale(0.92); }
+  to   { opacity: 1; transform: none; }
 }
 
 :root {
-  /* warm, crèmekleurig, "Turkse snackbar meets Instagram" */
-  --background: #fff8f1;
-  --foreground: #1f1a17;
-  --card: #ffffff;
-  --card-foreground: #1f1a17;
-  --popover: #ffffff;
-  --popover-foreground: #1f1a17;
+  /* Warm papier, çiğköfte-rood, goud voor VIP. */
+  --background: #fdf6ee;
+  --foreground: #1c1512;
+  --card: #fffdfb;
+  --card-foreground: #1c1512;
+  --popover: #fffdfb;
+  --popover-foreground: #1c1512;
 
-  --primary: #d7263d;
+  --primary: #c3202f;
   --primary-foreground: #fff8f1;
-  --secondary: #ffeddf;
-  --secondary-foreground: #1f1a17;
-  --muted: #f6ebe0;
-  --muted-foreground: #8a7f78;
-  --accent: #ffe8d6;
-  --accent-foreground: #1f1a17;
-  --destructive: #c1121f;
+  --secondary: #f6e7d8;
+  --secondary-foreground: #1c1512;
+  --muted: #f3e8dc;
+  --muted-foreground: #8a7a6d;
+  --accent: #f6e7d8;
+  --accent-foreground: #1c1512;
+  --destructive: #b01324;
 
-  --border: #ebdfd3;
-  --input: #ebdfd3;
-  --ring: #d7263d;
-  --radius: 0.875rem;
+  --border: #e8dacb;
+  --input: #e2d2c0;
+  --ring: #c3202f;
+  --radius: 1rem;
 
   /* merk */
-  --cig: #d7263d;
-  --cig-2: #ff8a3d;
-  --success: #2bb673;
-  --warning: #f5a524;
-  --gold-from: #f7d774;
-  --gold-to: #d4a017;
-  --gold: #d4a017;
-  --bf: #ff5c8a;
+  --cig: #c3202f;
+  --cig-2: #ef7a35;
+  --ink: #1c1512;
+  --success: #1f8f5f;
+  --warning: #d98324;
+  --gold-from: #f3d27a;
+  --gold-to: #b5881a;
+  --gold: #a87c15;
+  --bf: #e24b7b;
+
+  /* Warm getinte schaduwen; zwart maakt alles meteen goedkoop. */
+  --shadow-xs: 0 1px 2px rgba(80, 45, 25, 0.05);
+  --shadow-sm: 0 1px 2px rgba(80, 45, 25, 0.06), 0 2px 6px rgba(80, 45, 25, 0.04);
+  --shadow-md: 0 2px 4px rgba(80, 45, 25, 0.05), 0 8px 20px -6px rgba(80, 45, 25, 0.1);
+  --shadow-lg: 0 4px 8px rgba(80, 45, 25, 0.06), 0 18px 40px -12px rgba(80, 45, 25, 0.16);
+  --grain-opacity: 0.035;
 }
 
 .dark {
-  --background: #16110f;
-  --foreground: #f7efe9;
-  --card: #221b18;
-  --card-foreground: #f7efe9;
-  --popover: #221b18;
-  --popover-foreground: #f7efe9;
+  --background: #14100e;
+  --foreground: #f5ece4;
+  --card: #1e1816;
+  --card-foreground: #f5ece4;
+  --popover: #1e1816;
+  --popover-foreground: #f5ece4;
 
-  --primary: #ff4d63;
-  --primary-foreground: #16110f;
-  --secondary: #2c2320;
-  --secondary-foreground: #f7efe9;
-  --muted: #2c2320;
-  --muted-foreground: #b4a79e;
-  --accent: #332824;
-  --accent-foreground: #f7efe9;
-  --destructive: #ff5d6c;
+  --primary: #ff5667;
+  --primary-foreground: #14100e;
+  --secondary: #2a2220;
+  --secondary-foreground: #f5ece4;
+  --muted: #262020;
+  --muted-foreground: #a99a8f;
+  --accent: #2f2724;
+  --accent-foreground: #f5ece4;
+  --destructive: #ff6274;
 
-  --border: oklch(1 0 0 / 12%);
-  --input: oklch(1 0 0 / 16%);
-  --ring: #ff4d63;
+  --border: oklch(1 0 0 / 10%);
+  --input: oklch(1 0 0 / 14%);
+  --ring: #ff5667;
 
-  --cig: #ff4d63;
+  --cig: #ff5667;
   --cig-2: #ff9a55;
-  --success: #3ad18a;
-  --warning: #ffc04d;
-  --gold-from: #f7d774;
-  --gold-to: #e0ae1d;
-  --gold: #e8bb35;
-  --bf: #ff7aa2;
+  --ink: #f5ece4;
+  --success: #3fcb8b;
+  --warning: #f0b149;
+  --gold-from: #f3d27a;
+  --gold-to: #d9a521;
+  --gold: #e6c05a;
+  --bf: #ff7da5;
+
+  --shadow-xs: 0 1px 2px rgba(0, 0, 0, 0.4);
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.45), 0 2px 6px rgba(0, 0, 0, 0.3);
+  --shadow-md: 0 2px 4px rgba(0, 0, 0, 0.4), 0 8px 20px -6px rgba(0, 0, 0, 0.55);
+  --shadow-lg: 0 4px 8px rgba(0, 0, 0, 0.45), 0 18px 40px -12px rgba(0, 0, 0, 0.6);
+  --grain-opacity: 0.05;
 }
 
 @layer base {
@@ -123,47 +151,115 @@
   html {
     @apply font-sans;
     -webkit-tap-highlight-color: transparent;
+    text-rendering: optimizeLegibility;
   }
   body {
     @apply bg-background text-foreground;
+    font-feature-settings: "ss01", "cv01";
   }
-  h1,
-  h2,
-  h3 {
-    @apply font-heading font-extrabold tracking-tight;
+  /* Fijne ruis over de achtergrond: haalt de "plastic" look eraf. */
+  body::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    z-index: 0;
+    pointer-events: none;
+    opacity: var(--grain-opacity);
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3'/%3E%3C/filter%3E%3Crect width='140' height='140' filter='url(%23n)'/%3E%3C/svg%3E");
   }
-  /* 24u-notatie en NL-datums komen uit date-fns, niet uit de browser-locale */
+  h1, h2, h3 {
+    @apply font-heading;
+    letter-spacing: -0.025em;
+  }
+  /* Cijfers altijd uitgelijnd: saldo's en biedingen springen anders. */
+  .tabular-nums, time, [data-numeric] {
+    font-variant-numeric: tabular-nums;
+  }
 }
 
-@utility pb-safe {
-  padding-bottom: max(env(safe-area-inset-bottom), 0px);
-}
-@utility pt-safe {
-  padding-top: max(env(safe-area-inset-top), 0px);
+/* ---------- typografie ---------- */
+
+/** Klein kapitaalachtig labeltje boven een sectie. */
+@utility label-eyebrow {
+  font-size: 0.6875rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--muted-foreground);
 }
 
-/* Gouden glow voor Dragos (VIP) */
-@utility glow-gold {
-  box-shadow: 0 0 12px rgba(212, 160, 23, 0.6);
+/** Groot display-cijfer (saldo, bod). */
+@utility display-xl {
+  font-family: var(--font-bricolage), sans-serif;
+  font-weight: 800;
+  letter-spacing: -0.04em;
+  line-height: 0.95;
+  font-variant-numeric: tabular-nums;
 }
+
+/* ---------- oppervlakken ---------- */
+
+@utility surface {
+  background-color: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-sm);
+}
+
+@utility surface-raised {
+  background-color: var(--card);
+  border: 1px solid var(--border);
+  border-radius: calc(var(--radius) * 1.25);
+  box-shadow: var(--shadow-md);
+}
+
+@utility shadow-warm-sm { box-shadow: var(--shadow-sm); }
+@utility shadow-warm-md { box-shadow: var(--shadow-md); }
+@utility shadow-warm-lg { box-shadow: var(--shadow-lg); }
+
+/* ---------- rollen ---------- */
+
 @utility text-gold {
-  background-image: linear-gradient(135deg, var(--gold-from), var(--gold-to));
+  background-image: linear-gradient(100deg, var(--gold-from), var(--gold-to));
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
 }
 @utility ring-gold {
-  box-shadow: 0 0 0 2px var(--gold-to), 0 0 12px rgba(212, 160, 23, 0.5);
+  box-shadow: 0 0 0 2px var(--gold-to), 0 0 14px -2px rgba(181, 136, 26, 0.55);
 }
 @utility ring-bf {
-  box-shadow: 0 0 0 2px var(--bf), 0 0 10px rgba(255, 92, 138, 0.45);
+  box-shadow: 0 0 0 2px var(--bf), 0 0 12px -2px rgba(226, 75, 123, 0.5);
 }
 
-/* Horizontale dagenstrips scrollen zonder zichtbare balk */
+/* ---------- layout ---------- */
+
+@utility pb-safe { padding-bottom: max(env(safe-area-inset-bottom), 0px); }
+@utility pt-safe { padding-top: max(env(safe-area-inset-top), 0px); }
+
 @utility no-scrollbar {
   scrollbar-width: none;
   -ms-overflow-style: none;
-  &::-webkit-scrollbar {
-    display: none;
+  &::-webkit-scrollbar { display: none; }
+}
+
+/** Laat kaarten na elkaar binnenkomen. */
+@utility stagger {
+  & > * {
+    animation: rise 0.45s cubic-bezier(0.22, 1, 0.36, 1) both;
+  }
+  & > *:nth-child(1) { animation-delay: 0.02s; }
+  & > *:nth-child(2) { animation-delay: 0.06s; }
+  & > *:nth-child(3) { animation-delay: 0.1s; }
+  & > *:nth-child(4) { animation-delay: 0.14s; }
+  & > *:nth-child(5) { animation-delay: 0.18s; }
+  & > *:nth-child(n + 6) { animation-delay: 0.22s; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
   }
 }
