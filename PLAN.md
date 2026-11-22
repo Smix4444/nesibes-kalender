@@ -1253,7 +1253,7 @@ Voor Nesibe wordt 💡 vervangen door 📥 **Inbox** met een teller (ideeën sta
 | **11. Ideeën & album** ✅ | `/ideas` met stemmen en "Plan dit!", storage-buckets, album met compressie en viewer | Ideeën stemmen/plannen werkt; foto's alleen zichtbaar voor deelnemers |
 | **12. Check-in, badges & Wrapped** ✅ | Check-in, badge-jobs, `/badges`, Wrapped-berekening + stories-UI + delen | `select private.job_monthly_wrapped()` handmatig uitvoeren geeft correcte Wrapped voor testdata |
 | **13. Agenda-sync** ✅ | `/api/calendar/[token]`, instellingenpagina | Abonneren in Google Calendar en Apple Agenda toont de juiste afspraken |
-| **14. Afwerking** | Lege staten, skeletons, confetti, toegankelijkheid, Lighthouse-check (PWA/perf), `scripts/test-flows.ts`, README met uitleg | Lighthouse ≥ 90 op mobiel voor performance en best practices; alle flows uit sectie 16 slagen |
+| **14. Afwerking** ✅ | Lege staten, skeletons, confetti, toegankelijkheid, Lighthouse-check (PWA/perf), `scripts/test-flows.ts`, README met uitleg | Lighthouse ≥ 90 op mobiel voor performance en best practices; alle flows uit sectie 16 slagen |
 
 ---
 

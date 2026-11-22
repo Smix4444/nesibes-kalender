@@ -18,7 +18,7 @@ import { CATEGORY_LIST, type AppointmentCategory } from "@/lib/categories";
 import { COIN_EMOJI, DURATION_CHOICES, ROLE_META, type AppRole } from "@/lib/config";
 import { freeWindows, startOptions, type AvailabilityRule, type BusySlot } from "@/lib/availability";
 import { atLocalTime, fmt, fmtDuration } from "@/lib/dates";
-import { createGroupActivity, requestAppointment } from "@/lib/actions/appointments";
+import { createGroupActivity, requestAppointment, requestSeries } from "@/lib/actions/appointments";
 import type { Tables } from "@/lib/database.types";
 import { cn } from "@/lib/utils";
 
@@ -61,6 +61,13 @@ export function NewAppointmentWizard({
   const [description, setDescription] = useState("");
   const [priority, setPriority] = useState(false);
   const [place, setPlace] = useState<ChosenPlace | null>(null);
+  const [repeat, setRepeat] = useState(false);
+  const [freq, setFreq] = useState<"weekly" | "biweekly" | "monthly">("weekly");
+  const [until, setUntil] = useState(() => {
+    const d = new Date();
+    d.setMonth(d.getMonth() + 3);
+    return d.toISOString().slice(0, 10);
+  });
   const [userIds, setUserIds] = useState<string[]>([]);
   const [groupIds, setGroupIds] = useState<string[]>([]);
 
@@ -94,7 +101,20 @@ export function NewAppointmentWizard({
 
     startTransition(async () => {
       const result =
-        mode === "group"
+        mode === "solo" && repeat
+          ? await requestSeries({
+              title: title.trim(),
+              category,
+              freq,
+              first_starts_at: startsAt.toISOString(),
+              duration_minutes: duration,
+              until_date: until,
+              location_name: place?.name ?? null,
+              location_address: place?.address ?? null,
+              lat: place?.lat ?? null,
+              lng: place?.lng ?? null,
+            })
+          : mode === "group"
           ? await createGroupActivity({
               title: title.trim(),
               category,
@@ -128,8 +148,15 @@ export function NewAppointmentWizard({
       }
 
       confetti({ particleCount: 90, spread: 70, origin: { y: 0.7 } });
-      toast.success(mode === "group" ? "Uitnodiging verstuurd! 🎉" : "Aanvraag verstuurd! 🤞");
-      router.push(result.id ? `/appointments/${result.id}` : "/");
+      toast.success(
+        repeat && mode === "solo"
+          ? "Vaste afspraak aangevraagd! 🔁"
+          : mode === "group"
+            ? "Uitnodiging verstuurd! 🎉"
+            : "Aanvraag verstuurd! 🤞",
+      );
+      // Een reeks heeft nog geen afspraakpagina tot Nesibe ja zegt.
+      router.push(result.id && !(repeat && mode === "solo") ? `/appointments/${result.id}` : "/");
     });
   }
 
@@ -225,6 +252,50 @@ export function NewAppointmentWizard({
             </ul>
           </div>
 
+          {mode === "solo" ? (
+            <Card>
+              <CardContent className="space-y-3 py-4">
+                <div className="flex items-center justify-between gap-3">
+                  <div>
+                    <p className="font-heading font-bold">🔁 Herhaal dit</p>
+                    <p className="text-xs text-muted-foreground">
+                      Elke week hetzelfde moment, tot je stopt.
+                    </p>
+                  </div>
+                  <Switch checked={repeat} onCheckedChange={setRepeat} aria-label="Herhalen" />
+                </div>
+
+                {repeat ? (
+                  <>
+                    <ul className="flex flex-wrap gap-2">
+                      {([
+                        ["weekly", "Elke week"],
+                        ["biweekly", "Om de 2 weken"],
+                        ["monthly", "Elke maand"],
+                      ] as const).map(([value, label]) => (
+                        <li key={value}>
+                          <Chip active={freq === value} onClick={() => setFreq(value)}>
+                            {label}
+                          </Chip>
+                        </li>
+                      ))}
+                    </ul>
+                    <div className="space-y-1.5">
+                      <Label htmlFor="until">Tot wanneer? (max. 6 maanden)</Label>
+                      <Input
+                        id="until"
+                        type="date"
+                        value={until}
+                        onChange={(e) => setUntil(e.target.value)}
+                        className="h-11"
+                      />
+                    </div>
+                  </>
+                ) : null}
+              </CardContent>
+            </Card>
+          ) : null}
+
           <div className="space-y-2">
             <Label>Hoe laat?</Label>
             {times.length === 0 ? (
@@ -317,6 +388,12 @@ export function NewAppointmentWizard({
                 : `Nesibe 👑 + ${userIds.length + groupIds.length} getagd`}
             </Row>
             {place ? <Row label="Waar">📍 {place.name}</Row> : null}
+            {repeat && mode === "solo" ? (
+              <Row label="Herhaalt">
+                {freq === "weekly" ? "elke week" : freq === "biweekly" ? "om de 2 weken" : "elke maand"}{" "}
+                tot {until}
+              </Row>
+            ) : null}
             {priority ? <Row label="Priority">{COIN_EMOJI} ja</Row> : null}
             {description ? <Row label="Notitie">{description}</Row> : null}
           </CardContent>
@@ -331,9 +408,11 @@ export function NewAppointmentWizard({
         {pending
           ? "Versturen…"
           : step === steps.length - 1
-            ? mode === "group"
-              ? "Uitnodiging versturen 🎉"
-              : "Aanvraag versturen 🤞"
+            ? repeat && mode === "solo"
+              ? "Vaste afspraak aanvragen 🔁"
+              : mode === "group"
+                ? "Uitnodiging versturen 🎉"
+                : "Aanvraag versturen 🤞"
             : "Verder"}
       </Button>
     </div>
