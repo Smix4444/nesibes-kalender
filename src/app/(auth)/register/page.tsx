@@ -11,20 +11,20 @@ export const metadata: Metadata = { title: "Registreren" };
 export default function RegisterPage() {
   return (
     <>
-      <header className="relative overflow-hidden bg-[#0a1020] px-6 pt-safe pb-12 text-white">
+      <header className="relative overflow-hidden bg-background px-6 pt-safe pb-6">
         <span
-          className="absolute -top-16 -right-12 size-56 rotate-[-18deg] rounded-[46%] bg-cig-2/20"
+          className="absolute -top-20 -right-16 size-56 rotate-[-18deg] rounded-[46%] bg-cig-2/[0.05]"
           aria-hidden
         />
         <div className="relative mx-auto w-full max-w-md pt-12">
           <h1 className="font-heading text-[34px] leading-tight font-extrabold">Doe mee</h1>
-          <p className="mt-2 max-w-[30ch] text-[15px] text-white/60">
+          <p className="mt-2 max-w-[30ch] text-[15px] text-muted-foreground">
             Je hebt een uitnodigingscode nodig. Vraag die aan Rayan.
           </p>
         </div>
       </header>
 
-      <div className="relative -mt-8 flex flex-1 flex-col justify-center rounded-t-[28px] bg-background px-6 pb-16 shadow-warm-lg">
+      <div className="relative bg-background px-6 pb-16">
       <div className="mx-auto w-full max-w-md pt-8">
       <AuthForm action={register} label="Account aanmaken">
         <div className="space-y-1.5">
