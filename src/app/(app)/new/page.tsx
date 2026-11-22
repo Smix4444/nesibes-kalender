@@ -72,7 +72,8 @@ export default async function NewPage({ searchParams }: PageProps<"/new">) {
       rules={rules}
       busy={busy}
       demand={demand}
-      people={people.filter((p) => p.id !== profile.id && p.role !== "owner")}
+      people={people.filter((p) => p.id !== profile.id)}
+      ownerId={people.find((p) => p.role === "owner")?.id ?? null}
       groups={groups}
       savedPlaces={savedPlaces.data ?? []}
       prefill={prefill}

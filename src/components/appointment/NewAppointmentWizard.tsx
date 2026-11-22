@@ -34,6 +34,7 @@ export function NewAppointmentWizard({
   people,
   groups,
   savedPlaces,
+  ownerId,
   prefill,
 }: {
   role: AppRole;
@@ -46,6 +47,8 @@ export function NewAppointmentWizard({
   people: Pick<Tables<"profiles">, "id" | "display_name" | "emoji" | "color" | "avatar_url" | "role">[];
   groups: (Tables<"groups"> & { group_members: { user_id: string }[] })[];
   savedPlaces: Tables<"saved_places">[];
+  /** Nesibe; nodig om te weten of zij meedoet. */
+  ownerId: string | null;
   prefill?: { day?: string; title?: string; category?: AppointmentCategory; ideaId?: string };
 }) {
   const router = useRouter();
@@ -74,7 +77,21 @@ export function NewAppointmentWizard({
   const freePriority = ROLE_META[role].freePriority;
   const canAfford = freePriority || balance >= 1;
 
-  const windows = useMemo(() => freeWindows(day, rules, busy), [day, rules, busy]);
+  // Nesibe doet mee als ze los getagd is of in een getagde groep zit.
+  const nesibeJoins = useMemo(() => {
+    if (mode === "solo") return true;
+    if (!ownerId) return false;
+    if (userIds.includes(ownerId)) return true;
+    return groups.some(
+      (g) => groupIds.includes(g.id) && g.group_members.some((m) => m.user_id === ownerId),
+    );
+  }, [mode, ownerId, userIds, groupIds, groups]);
+
+  // Zonder Nesibe hoeven haar vrije uren niet te gelden: dan mag de hele dag.
+  const windows = useMemo(
+    () => (nesibeJoins ? freeWindows(day, rules, busy) : [{ start: 8 * 60, end: 23 * 60 }]),
+    [nesibeJoins, day, rules, busy],
+  );
   const times = useMemo(() => startOptions(windows, duration), [windows, duration]);
 
   const steps: { key: string; label: string }[] = [
@@ -296,6 +313,12 @@ export function NewAppointmentWizard({
             </Card>
           ) : null}
 
+          {!nesibeJoins ? (
+            <p className="rounded-xl bg-muted px-3 py-2 text-sm text-muted-foreground">
+              Nesibe doet niet mee, dus je bent niet gebonden aan haar vrije uren.
+            </p>
+          ) : null}
+
           <div className="space-y-2">
             <Label>Hoe laat?</Label>
             {times.length === 0 ? (
@@ -385,7 +408,7 @@ export function NewAppointmentWizard({
             <Row label="Met">
               {mode === "solo"
                 ? "Nesibe 👑"
-                : `Nesibe 👑 + ${userIds.length + groupIds.length} getagd`}
+                : `${userIds.length + groupIds.length} getagd${nesibeJoins ? ", incl. Nesibe 👑" : ""}`}
             </Row>
             {place ? <Row label="Waar">📍 {place.name}</Row> : null}
             {repeat && mode === "solo" ? (

@@ -64,7 +64,10 @@ export function PeoplePicker({
 
       <div className="space-y-2">
         <Label>Losse mensen</Label>
-        <p className="text-xs text-muted-foreground">Nesibe 👑 zit er altijd bij.</p>
+        <p className="text-xs text-muted-foreground">
+          Tag je Nesibe, dan moet zij de afspraak nog bevestigen. Zonder haar
+          staat hij meteen vast.
+        </p>
         <ul className="space-y-1">
           {people.map((person) => {
             const included = viaGroups.has(person.id);
