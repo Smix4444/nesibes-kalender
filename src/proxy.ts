@@ -32,14 +32,22 @@ export async function proxy(request: NextRequest) {
   );
 
   // Belangrijk: niet tussen createServerClient en getUser() iets anders doen.
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
+  const { data, error } = await supabase.auth.getUser();
+  const user = data.user;
 
   const { pathname } = request.nextUrl;
   const isPublic = PUBLIC_PATHS.some((p) => pathname === p || pathname.startsWith(`${p}/`));
 
-  if (!user && !isPublic) {
+  // Heeft deze browser uberhaupt een sessiecookie?
+  const hasSessionCookie = request.cookies
+    .getAll()
+    .some((c) => c.name.startsWith("sb-") && c.name.includes("auth-token"));
+
+  // Hapert Supabase even, dan is dat geen reden om iemand uit te loggen: de
+  // pagina's doen zelf ook nog een controle via requireProfile().
+  const transientFailure = !user && error !== null && hasSessionCookie;
+
+  if (!user && !isPublic && !transientFailure) {
     const url = request.nextUrl.clone();
     url.pathname = "/login";
     url.searchParams.set("next", pathname);
