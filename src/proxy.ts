@@ -57,5 +57,9 @@ export async function proxy(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ["/((?!_next/static|_next/image|icons|manifest.webmanifest|sw.js|favicon.ico).*)"],
+  // /api blijft buiten de proxy: die routes regelen hun eigen toegang.
+  // /api/push/dispatch wordt door de database aangeroepen (met een secret-
+  // header, zonder cookie) en /api/calendar/[token] door Google Agenda; een
+  // redirect naar /login zou die allebei stilletjes breken.
+  matcher: ["/((?!api|_next/static|_next/image|icons|manifest.webmanifest|sw.js|favicon.ico).*)"],
 };
