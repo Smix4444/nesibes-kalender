@@ -70,8 +70,9 @@ niet als push verstuurd. Zonder `invite_code` kan niemand registreren.
 1. Push naar de repo (`git push -u origin main`).
 2. **Vercel** → Add New Project → importeer de repo → framework Next.js →
    zet alle variabelen uit `.env.local` erbij → Deploy.
-3. **GitHub → Settings → Secrets → Actions**, voor de migratie-workflow:
-   `SUPABASE_ACCESS_TOKEN`, `SUPABASE_PROJECT_REF`, `SUPABASE_DB_PASSWORD`.
+3. Migrations gaan automatisch via de **Supabase GitHub-integratie**
+   (Supabase → Settings → Integrations → GitHub, working directory `.`,
+   production branch `main`). Daar zijn geen GitHub-secrets voor nodig.
 
 ### 6. Controleren
 
@@ -147,7 +148,8 @@ priority ↓ → tijdstip van het bod ↑.
 ## Database
 
 Migrations staan in `supabase/migrations/` en worden bij elke push naar `main`
-toegepast door `.github/workflows/supabase-migrations.yml`.
+toegepast door de **Supabase GitHub-integratie**. Lokaal kan het ook met
+`npm run db:push`.
 
 Schrijven gebeurt via `security definer` RPC-functies; clients lezen via RLS.
 Foutmeldingen uit die functies zijn Nederlands en worden letterlijk als toast
