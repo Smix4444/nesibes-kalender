@@ -40,6 +40,7 @@ const users = [
   { username: "eray",     display_name: "Eray",     email: "eray@example.com",     password: "Eray2026!",          role: "member", emoji: "😎", color: "#5C7AEA" },
   { username: "deepan",   display_name: "Deepan",   email: "deepan@example.com",   password: "Deepan2026!",        role: "member", emoji: "🔥", color: "#2BB673" },
   { username: "selinofc", display_name: "Selin",    email: "selinofc@example.com", password: "Selin2026!",         role: "member", emoji: "🧋", color: "#9B5DE5" },
+  { username: "enise",    display_name: "Enise",    email: "enise@example.com",    password: "Enise2026!",         role: "member", emoji: "🌻", color: "#2BB673" },
 ] as const;
 
 const roleBadge: Record<string, string | null> = { owner: "owner", admin: "bf", vip: "vip", member: null };
