@@ -5,6 +5,7 @@ import { EnablePushButton } from "@/components/push/EnablePushButton";
 import { ThemeToggle } from "@/components/settings/ThemeToggle";
 import { CalendarLink } from "@/components/settings/CalendarLink";
 import { Button } from "@/components/ui/button";
+import Link from "next/link";
 import { Card, CardContent } from "@/components/ui/card";
 import { requireProfile } from "@/lib/auth";
 import { createClient } from "@/lib/supabase/server";
@@ -38,6 +39,32 @@ export default async function SettingsPage() {
 
       <section className="space-y-2">
         <h2 className="font-heading font-bold">Agenda</h2>
+
+        {profile.role === "owner" ? (
+          <Card>
+            <CardContent className="space-y-3 py-4">
+              <div>
+                <p className="font-heading font-bold">📥 Je school- of werkagenda</p>
+                <p className="text-sm text-muted-foreground">
+                  Koppel je Apple- of Google-agenda, dan worden je lesuren automatisch
+                  blokken en kan niemand op die momenten iets aanvragen.
+                </p>
+              </div>
+              <Button
+                nativeButton={false}
+                render={<Link href="/planning" />}
+                variant="outline"
+                className="h-11 w-full"
+              >
+                Agenda koppelen
+              </Button>
+            </CardContent>
+          </Card>
+        ) : null}
+
+        <p className="text-xs text-muted-foreground">
+          Hieronder staat de omgekeerde richting: je NesiPlan-afspraken in je eigen agenda.
+        </p>
         {calendar ? (
           <CalendarLink token={calendar.token} />
         ) : (
