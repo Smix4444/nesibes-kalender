@@ -21,12 +21,13 @@ export default async function NewPage({ searchParams }: PageProps<"/new">) {
   const to = dayRange(days[days.length - 1]).to;
 
   const supabase = await createClient();
-  const [rules, busy, balance, people, groups] = await Promise.all([
+  const [rules, busy, balance, people, groups, savedPlaces] = await Promise.all([
     getAvailabilityRules(),
     getBusySlots(from, to),
     getBalance(profile.id),
     getProfiles(),
     getGroups(),
+    supabase.from("saved_places").select("*").order("name"),
   ]);
 
   // Openstaande aanvragen per dag: waarschuwt dat het een veiling wordt.
@@ -73,6 +74,7 @@ export default async function NewPage({ searchParams }: PageProps<"/new">) {
       demand={demand}
       people={people.filter((p) => p.id !== profile.id && p.role !== "owner")}
       groups={groups}
+      savedPlaces={savedPlaces.data ?? []}
       prefill={prefill}
     />
   );

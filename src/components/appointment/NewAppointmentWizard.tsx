@@ -13,6 +13,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Switch } from "@/components/ui/switch";
 import { DayStrip } from "@/components/agenda/DayStrip";
 import { PeoplePicker } from "@/components/people/PeoplePicker";
+import { LocationPicker, type ChosenPlace } from "@/components/map/LocationPicker";
 import { CATEGORY_LIST, type AppointmentCategory } from "@/lib/categories";
 import { COIN_EMOJI, DURATION_CHOICES, ROLE_META, type AppRole } from "@/lib/config";
 import { freeWindows, startOptions, type AvailabilityRule, type BusySlot } from "@/lib/availability";
@@ -32,6 +33,7 @@ export function NewAppointmentWizard({
   demand,
   people,
   groups,
+  savedPlaces,
   prefill,
 }: {
   role: AppRole;
@@ -43,6 +45,7 @@ export function NewAppointmentWizard({
   demand: Record<string, number>;
   people: Pick<Tables<"profiles">, "id" | "display_name" | "emoji" | "color" | "avatar_url" | "role">[];
   groups: (Tables<"groups"> & { group_members: { user_id: string }[] })[];
+  savedPlaces: Tables<"saved_places">[];
   prefill?: { day?: string; title?: string; category?: AppointmentCategory; ideaId?: string };
 }) {
   const router = useRouter();
@@ -57,6 +60,7 @@ export function NewAppointmentWizard({
   const [time, setTime] = useState<string | null>(null);
   const [description, setDescription] = useState("");
   const [priority, setPriority] = useState(false);
+  const [place, setPlace] = useState<ChosenPlace | null>(null);
   const [userIds, setUserIds] = useState<string[]>([]);
   const [groupIds, setGroupIds] = useState<string[]>([]);
 
@@ -69,6 +73,7 @@ export function NewAppointmentWizard({
   const steps: { key: string; label: string }[] = [
     { key: "what", label: "Wat?" },
     { key: "when", label: "Wanneer?" },
+    { key: "where", label: "Waar?" },
     ...(mode === "group" ? [{ key: "who", label: "Wie?" }] : []),
     { key: "extra", label: "Extra" },
     { key: "review", label: "Klaar?" },
@@ -96,6 +101,10 @@ export function NewAppointmentWizard({
               description,
               starts_at: startsAt.toISOString(),
               ends_at: endsAt.toISOString(),
+              location_name: place?.name ?? null,
+              location_address: place?.address ?? null,
+              lat: place?.lat ?? null,
+              lng: place?.lng ?? null,
               user_ids: userIds,
               group_ids: groupIds,
             })
@@ -105,6 +114,10 @@ export function NewAppointmentWizard({
               description,
               starts_at: startsAt.toISOString(),
               ends_at: endsAt.toISOString(),
+              location_name: place?.name ?? null,
+              location_address: place?.address ?? null,
+              lat: place?.lat ?? null,
+              lng: place?.lng ?? null,
               is_priority: priority,
               idea_id: prefill?.ideaId ?? null,
             });
@@ -233,6 +246,15 @@ export function NewAppointmentWizard({
         </div>
       ) : null}
 
+      {current.key === "where" ? (
+        <div className="space-y-3">
+          <LocationPicker value={place} onChange={setPlace} savedPlaces={savedPlaces} />
+          <p className="text-xs text-muted-foreground">
+            Een plek kiezen mag, maar hoeft niet.
+          </p>
+        </div>
+      ) : null}
+
       {current.key === "who" ? (
         <PeoplePicker
           people={people}
@@ -294,6 +316,7 @@ export function NewAppointmentWizard({
                 ? "Nesibe 👑"
                 : `Nesibe 👑 + ${userIds.length + groupIds.length} getagd`}
             </Row>
+            {place ? <Row label="Waar">📍 {place.name}</Row> : null}
             {priority ? <Row label="Priority">{COIN_EMOJI} ja</Row> : null}
             {description ? <Row label="Notitie">{description}</Row> : null}
           </CardContent>
