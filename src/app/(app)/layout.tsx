@@ -1,16 +1,20 @@
 import { AppHeader } from "@/components/nav/AppHeader";
 import { BottomNav } from "@/components/nav/BottomNav";
+import { getInboxCount, getUnreadCount, requireProfile } from "@/lib/auth";
 
-/**
- * Shell voor alle ingelogde schermen: sticky header met belletje,
- * inhoud, en de bottom nav. De auth-guard komt in fase 3 in deze layout.
- */
-export default function AppLayout({ children }: LayoutProps<"/">) {
+/** Shell voor alle ingelogde schermen; de proxy regelt de redirect naar /login. */
+export default async function AppLayout({ children }: LayoutProps<"/">) {
+  const profile = await requireProfile();
+  const [unread, inbox] = await Promise.all([
+    getUnreadCount(),
+    profile.role === "owner" ? getInboxCount() : Promise.resolve(0),
+  ]);
+
   return (
     <div className="flex min-h-dvh flex-col">
-      <AppHeader />
+      <AppHeader unreadCount={unread} />
       <main className="mx-auto w-full max-w-md flex-1 px-4 pt-4 pb-28">{children}</main>
-      <BottomNav role="member" />
+      <BottomNav role={profile.role} inboxCount={inbox} />
     </div>
   );
 }

@@ -814,6 +814,7 @@ export type Database = {
       can_see_appointment: { Args: { a_id: string }; Returns: boolean };
       cancel_appointment: { Args: { p_id: string; p_reason?: string }; Returns: undefined };
       check_in: { Args: { p_id: string }; Returns: string };
+      check_invite_code: { Args: { p_code: string }; Returns: boolean };
       close_auction: { Args: { p_auction: string; p_winner: string; p_also_accept?: string[] }; Returns: undefined };
       counter_propose: { Args: { p_id: string; p_starts: string; p_ends: string; p_message?: string }; Returns: string };
       create_group_activity: { Args: { p_title: string; p_category: Database["public"]["Enums"]["appt_category"]; p_description: string; p_starts_at: string; p_ends_at: string; p_location_name?: string; p_location_address?: string; p_lat?: number; p_lng?: number; p_user_ids?: string[]; p_group_ids?: string[]; p_poll_options?: Json; p_poll_closes_at?: string }; Returns: string };

@@ -1372,6 +1372,16 @@ language sql stable security definer set search_path = public, auth as $$
   where p.username = lower(p_username)
 $$;
 
+/** Klopt de uitnodigingscode? (private.config is niet zichtbaar via de API) */
+create or replace function public.check_invite_code(p_code text)
+returns boolean
+language sql stable security definer set search_path = public, private as $$
+  select exists (
+    select 1 from private.config
+    where key = 'invite_code' and lower(value) = lower(trim(p_code))
+  )
+$$;
+
 -- ------------------------------------------------------------------ grants --
 
 -- Standaard dicht: niets uitvoerbaar voor anon of publiek.
@@ -1391,3 +1401,4 @@ end $$;
 
 -- Inloggen met gebruikersnaam moet kunnen vóór je ingelogd bent.
 grant execute on function public.username_to_email(text) to anon;
+grant execute on function public.check_invite_code(text) to anon;
